@@ -1,0 +1,2535 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products - TechWorld</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <style>
+      :root {
+        --primary-dark: #0a192f;
+        --primary-light: #64ffda;
+        --secondary-dark: #172a45;
+        --secondary-light: #ccd6f6;
+        --text-light: #e6f1ff;
+        --text-dark: #8892b0;
+        --accent: #1e90ff;
+        --card-bg: rgba(23, 42, 69, 0.7);
+        --error: #ff6b6b;
+        --success: #64ffda;
+      }
+
+      [data-theme="light"] {
+        --primary-dark: #f8f9fa;
+        --primary-light: #1e90ff;
+        --secondary-dark: #e9ecef;
+        --secondary-light: #495057;
+        --text-light: #212529;
+        --text-dark: #6c757d;
+        --accent: #1a73e8;
+        --card-bg: rgba(233, 236, 239, 0.8);
+        --error: #dc3545;
+        --success: #28a745;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      body {
+        color: var(--text-light);
+        background-color: var(--primary-dark);
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Starfield Background */
+      #starfield {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: linear-gradient(to bottom, #000428, #004e92);
+      }
+
+      .star {
+        position: absolute;
+        background-color: #fff;
+        border-radius: 50%;
+        animation: fall linear infinite;
+      }
+
+      @keyframes fall {
+        to {
+          transform: translateY(100vh);
+        }
+      }
+
+      /* Navigation */
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 5%;
+        background-color: rgba(10, 25, 47, 0.9);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+
+      .logo i {
+        margin-right: 0.5rem;
+        color: var(--accent);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 500;
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--primary-light);
+        transition: width 0.3s;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 5px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--primary-light);
+        color: var(--primary-light);
+      }
+
+      .btn-primary:hover,
+      .btn-outline:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .theme-toggle {
+        background: none;
+        border: none;
+        color: var(--text-light);
+        font-size: 1.2rem;
+        cursor: pointer;
+        margin-left: 1rem;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid var(--primary-light);
+      }
+
+      .avatar-dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: var(--secondary-dark);
+        min-width: 160px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .dropdown-content a {
+        color: var(--text-light);
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .avatar-dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .hamburger {
+        display: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+
+      /* Products Section */
+      .products-header {
+        padding: 3rem 5%;
+        text-align: center;
+      }
+
+      .products-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(
+          to right,
+          var(--primary-light),
+          var(--accent)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .products-header p {
+        color: var(--text-dark);
+        max-width: 800px;
+        margin: 0 auto 2rem;
+      }
+
+      .filter-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 5%;
+        background-color: var(--secondary-dark);
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .filter-label {
+        color: var(--text-light);
+        font-weight: 500;
+      }
+
+      .filter-select {
+        padding: 0.5rem;
+        border-radius: 5px;
+        background-color: var(--card-bg);
+        color: var(--text-light);
+        border: 1px solid var(--text-dark);
+      }
+
+      .search-bar {
+        display: flex;
+        align-items: center;
+      }
+
+      .search-input {
+        padding: 0.5rem 1rem;
+        border-radius: 5px 0 0 5px;
+        border: 1px solid var(--text-dark);
+        background-color: var(--card-bg);
+        color: var(--text-light);
+        width: 250px;
+      }
+
+      .search-btn {
+        padding: 0.5rem 1rem;
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        border: none;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+      }
+
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+        padding: 2rem 5%;
+      }
+
+      .product-card {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+      }
+
+      .product-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .product-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        padding: 0.3rem 0.6rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .product-info {
+        padding: 1.5rem;
+        position: relative;
+      }
+
+      .product-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-light);
+      }
+
+      .product-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        margin-bottom: 1rem;
+      }
+
+      .old-price {
+        text-decoration: line-through;
+        color: var(--text-dark);
+        font-size: 1rem;
+        margin-left: 0.5rem;
+      }
+
+      .product-rating {
+        color: #ffc107;
+        margin-bottom: 1rem;
+      }
+
+      .product-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      .wishlist-btn {
+        background: none;
+        border: none;
+        color: var(--error);
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        padding: 2rem 5%;
+      }
+
+      .pagination-btn {
+        padding: 0.5rem 1rem;
+        margin: 0 0.5rem;
+        background-color: var(--secondary-dark);
+        color: var(--text-light);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .pagination-btn.active {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      .pagination-btn:hover:not(.active) {
+        background-color: var(--card-bg);
+      }
+
+      /* Floating Icons */
+      .floating-icons {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        z-index: 99;
+      }
+
+      .floating-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+
+      .floating-icon:hover {
+        transform: scale(1.1);
+      }
+
+      /* Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background-color: var(--secondary-dark);
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .modal h2 {
+        margin-bottom: 1.5rem;
+        color: var(--primary-light);
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 5px;
+        border: 1px solid var(--text-dark);
+        background-color: transparent;
+        color: var(--text-light);
+      }
+
+      .form-submit {
+        width: 100%;
+        padding: 0.8rem;
+        margin-top: 1rem;
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      /* Social Login Buttons */
+      .social-login {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin: 1rem 0;
+      }
+
+      .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s;
+      }
+
+      .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .google-btn {
+        background-color: #fff;
+        color: #757575;
+      }
+
+      .facebook-btn {
+        background-color: #3b5998;
+        color: white;
+      }
+
+      .phone-btn {
+        background-color: var(--accent);
+        color: white;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        margin: 1rem 0;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid var(--text-dark);
+      }
+
+      .divider-text {
+        padding: 0 1rem;
+        color: var(--text-dark);
+      }
+
+      /* Phone Auth Modal */
+      .phone-auth-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .phone-auth-content {
+        background-color: var(--secondary-dark);
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 400px;
+        width: 90%;
+        position: relative;
+      }
+
+      .recaptcha-container {
+        margin: 1rem 0;
+      }
+
+      /* Cart Modal */
+      .cart-modal-content {
+        max-width: 800px;
+        width: 90%;
+      }
+
+      .cart-items {
+        max-height: 400px;
+        overflow-y: auto;
+        margin-bottom: 1rem;
+      }
+
+      .cart-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--text-dark);
+      }
+
+      .cart-item-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+
+      .cart-item-details {
+        flex: 1;
+      }
+
+      .cart-item-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .cart-item-price {
+        color: var(--primary-light);
+        font-weight: 600;
+      }
+
+      .cart-item-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .quantity-btn {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background-color: var(--primary-dark);
+        color: var(--text-light);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .quantity-input {
+        width: 40px;
+        text-align: center;
+        background-color: transparent;
+        color: var(--text-light);
+        border: 1px solid var(--text-dark);
+        border-radius: 5px;
+        padding: 0.2rem;
+      }
+
+      .remove-item {
+        background: none;
+        border: none;
+        color: #ff6b6b;
+        cursor: pointer;
+      }
+
+      .cart-summary {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--text-dark);
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+
+      .total-row {
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--text-dark);
+      }
+
+      .checkout-btn {
+        width: 100%;
+        margin-top: 1rem;
+      }
+
+      /* Toast Notification */
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1100;
+      }
+
+      .toast {
+        padding: 1rem 1.5rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .toast-success {
+        background-color: var(--success);
+        color: var(--primary-dark);
+      }
+
+      .toast-error {
+        background-color: var(--error);
+        color: white;
+      }
+
+      .toast-close {
+        margin-left: 1rem;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+
+      /* Ad Modal */
+      .ad-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1001;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .ad-content {
+        background-color: var(--secondary-dark);
+        border-radius: 10px;
+        overflow: hidden;
+        max-width: 600px;
+        width: 90%;
+        position: relative;
+      }
+
+      .ad-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+      }
+
+      .ad-text {
+        padding: 1.5rem;
+        text-align: center;
+      }
+
+      .ad-text h3 {
+        margin-bottom: 1rem;
+        color: var(--primary-light);
+      }
+
+      .ad-text p {
+        margin-bottom: 1.5rem;
+        color: var(--text-light);
+      }
+
+      .ad-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        padding: 0 1.5rem 1.5rem;
+      }
+
+      .ad-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      /* Mobile Styles */
+      @media (max-width: 992px) {
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background-color: var(--secondary-dark);
+          flex-direction: column;
+          padding: 1rem 5%;
+          gap: 1rem;
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .hamburger {
+          display: block;
+        }
+
+        .filter-container {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .filter-group {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .search-bar {
+          width: 100%;
+        }
+
+        .search-input {
+          flex: 1;
+        }
+
+        .floating-icons {
+          bottom: 20px;
+          right: 20px;
+        }
+
+        .floating-icon {
+          width: 40px;
+          height: 40px;
+          font-size: 1rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .products-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .filter-group {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+
+        .search-input {
+          width: 100%;
+        }
+
+        .product-actions {
+          flex-direction: column;
+        }
+
+        .btn-sm {
+          width: 100%;
+        }
+
+        .ad-actions {
+          flex-direction: column;
+        }
+      }
+
+      /* Animations */
+      .animate-pop {
+        animation: popIn 0.5s ease-out;
+      }
+
+      @keyframes popIn {
+        0% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .animate-fade {
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      /* Loading Spinner */
+      .spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: var(--primary-light);
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Starfield Background -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Ad Modal -->
+    <div class="ad-modal" id="adModal">
+      <div class="ad-content animate-pop">
+        <button class="ad-close" id="closeAd">&times;</button>
+        <img
+          src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+          alt="Special Offer"
+          class="ad-image"
+        />
+        <div class="ad-text">
+          <h3>Limited Time Offer!</h3>
+          <p>
+            Get 20% off on all gaming laptops this weekend. Use code
+            <strong>GAME20</strong> at checkout.
+          </p>
+        </div>
+        <div class="ad-actions">
+          <button class="btn btn-primary" id="shopNowAd">Shop Now</button>
+          <button class="btn btn-outline" id="laterAd">Maybe Later</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+      <a href="index.html" class="logo">
+        <i class="fas fa-laptop-code"></i> TechWorld
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="products.html" class="active">Products</a>
+        <a href="./category.html">Categories</a>
+        <a href="./products.html">Build PC</a>
+        <a href="./about_us..html">About us</a>
+      </div>
+
+      <div class="nav-actions" id="navActions">
+        <button class="btn btn-outline" id="loginBtn">Login</button>
+        <button class="btn btn-primary" id="registerBtn">Register</button>
+        <button class="theme-toggle" id="themeToggle">
+          <i class="fas fa-moon"></i>
+        </button>
+        <div class="hamburger" id="hamburger">
+          <i class="fas fa-bars"></i>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Products Header -->
+    <section class="products-header">
+      <h1>Explore Our Premium Tech Collection</h1>
+      <p>
+        Discover the latest in cutting-edge technology with our wide selection
+        of computers, accessories, and peripherals. Find the perfect device to
+        match your needs and budget.
+      </p>
+    </section>
+
+    <!-- Filter Section -->
+    <div class="filter-container">
+      <div class="filter-group">
+        <span class="filter-label">Filter by:</span>
+        <select class="filter-select" id="categoryFilter">
+          <option value="all">All Categories</option>
+          <option value="laptops">Laptops</option>
+          <option value="desktops">Desktops</option>
+          <option value="gaming">Gaming</option>
+          <option value="accessories">Accessories</option>
+          <option value="monitors">Monitors</option>
+        </select>
+        <select class="filter-select" id="priceFilter">
+          <option value="all">All Prices</option>
+          <option value="0-50000">Under ₹50,000</option>
+          <option value="50000-100000">₹50,000 - ₹1,00,000</option>
+          <option value="100000-150000">₹1,00,000 - ₹1,50,000</option>
+          <option value="150000+">Over ₹1,50,000</option>
+        </select>
+        <select class="filter-select" id="brandFilter">
+          <option value="all">All Brands</option>
+          <option value="apple">Apple</option>
+          <option value="dell">Dell</option>
+          <option value="hp">HP</option>
+          <option value="lenovo">Lenovo</option>
+          <option value="asus">ASUS</option>
+          <option value="acer">Acer</option>
+          <option value="msi">MSI</option>
+        </select>
+      </div>
+      <div class="search-bar">
+        <input
+          type="text"
+          placeholder="Search products..."
+          class="search-input"
+          id="searchInput"
+        />
+        <button class="search-btn">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="products-grid" id="productsGrid">
+      <!-- Products will be loaded here by JavaScript -->
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button class="pagination-btn" id="prevPage">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="pagination-btn active">1</button>
+      <button class="pagination-btn">2</button>
+      <button class="pagination-btn">3</button>
+      <button class="pagination-btn">4</button>
+      <button class="pagination-btn">5</button>
+      <button class="pagination-btn" id="nextPage">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Floating Icons -->
+    <div class="floating-icons">
+      <div class="floating-icon" title="Cart" id="cartBtn">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cartCount">0</span>
+      </div>
+      <div class="floating-icon" title="Wishlist" id="wishlistBtn">
+        <i class="fas fa-heart"></i>
+        <span class="wishlist-count" id="wishlistCount">0</span>
+      </div>
+      <div class="floating-icon" title="Support" id="supportBtn">
+        <i class="fas fa-headset"></i>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+      <div class="modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Login to Your Account</h2>
+
+        <div class="social-login">
+          <button class="social-btn google-btn" id="googleLoginBtn">
+            <i class="fab fa-google"></i> Continue with Google
+          </button>
+          <button class="social-btn facebook-btn" id="facebookLoginBtn">
+            <i class="fab fa-facebook-f"></i> Continue with Facebook
+          </button>
+          <button class="social-btn phone-btn" id="phoneLoginBtn">
+            <i class="fas fa-phone"></i> Continue with Phone
+          </button>
+        </div>
+
+        <div class="divider">
+          <span class="divider-text">OR</span>
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" required />
+          </div>
+          <button type="submit" class="form-submit" id="emailLoginBtn">
+            <span id="loginBtnText">Login</span>
+            <span
+              id="loginSpinner"
+              class="spinner"
+              style="display: none"
+            ></span>
+          </button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem">
+          Don't have an account? <a href="#" id="switchToRegister">Register</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+      <div class="modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Create an Account</h2>
+
+        <div class="social-login">
+          <button class="social-btn google-btn" id="googleRegisterBtn">
+            <i class="fab fa-google"></i> Continue with Google
+          </button>
+          <button class="social-btn facebook-btn" id="facebookRegisterBtn">
+            <i class="fab fa-facebook-f"></i> Continue with Facebook
+          </button>
+          <button class="social-btn phone-btn" id="phoneRegisterBtn">
+            <i class="fas fa-phone"></i> Continue with Phone
+          </button>
+        </div>
+
+        <div class="divider">
+          <span class="divider-text">OR</span>
+        </div>
+
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="registerName">Full Name</label>
+            <input type="text" id="registerName" required />
+          </div>
+          <div class="form-group">
+            <label for="registerEmail">Email</label>
+            <input type="email" id="registerEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Password</label>
+            <input type="password" id="registerPassword" required />
+          </div>
+          <div class="form-group">
+            <label for="registerConfirm">Confirm Password</label>
+            <input type="password" id="registerConfirm" required />
+          </div>
+          <button type="submit" class="form-submit" id="emailRegisterBtn">
+            <span id="registerBtnText">Register</span>
+            <span
+              id="registerSpinner"
+              class="spinner"
+              style="display: none"
+            ></span>
+          </button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem">
+          Already have an account? <a href="#" id="switchToLogin">Login</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Phone Auth Modal -->
+    <div class="phone-auth-modal" id="phoneAuthModal">
+      <div class="phone-auth-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Phone Number Login</h2>
+        <form id="phoneAuthForm">
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              placeholder="+1 123 456 7890"
+              required
+            />
+          </div>
+          <div class="recaptcha-container" id="recaptchaContainer"></div>
+          <div id="verificationCodeGroup" style="display: none">
+            <div class="form-group">
+              <label for="verificationCode">Verification Code</label>
+              <input type="text" id="verificationCode" required />
+            </div>
+          </div>
+          <button type="submit" class="form-submit" id="phoneAuthBtn">
+            <span id="phoneAuthBtnText">Send Verification Code</span>
+            <span
+              id="phoneAuthSpinner"
+              class="spinner"
+              style="display: none"
+            ></span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+      <div class="modal-content cart-modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Your Shopping Cart</h2>
+        <div class="cart-items" id="cartItems">
+          <!-- Cart items will be added here -->
+        </div>
+        <div class="cart-summary">
+          <div class="summary-row">
+            <span>Subtotal:</span>
+            <span id="cartSubtotal">₹0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping:</span>
+            <span id="cartShipping">₹0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Tax:</span>
+            <span id="cartTax">₹0.00</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>Total:</span>
+            <span id="cartTotal">₹0.00</span>
+          </div>
+          <button class="btn btn-primary checkout-btn" id="checkoutBtn">
+            Proceed to Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Support Modal -->
+    <div class="modal" id="supportModal">
+      <div class="modal-content support-modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Contact Support</h2>
+        <form class="support-form" id="supportForm">
+          <div class="form-group">
+            <label for="supportName">Your Name</label>
+            <input type="text" id="supportName" required />
+          </div>
+          <div class="form-group">
+            <label for="supportEmail">Email</label>
+            <input type="email" id="supportEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="supportSubject">Subject</label>
+            <input type="text" id="supportSubject" required />
+          </div>
+          <div class="form-group">
+            <label for="supportMessage">Message</label>
+            <textarea id="supportMessage" required></textarea>
+          </div>
+          <button type="submit" class="form-submit">Send Message</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDxlEFhfp8yQw2F8R5enY0F2Dw5dtlSqjU",
+        authDomain: "techworld-497d8.firebaseapp.com",
+        projectId: "techworld-497d8",
+        storageBucket: "techworld-497d8.firebasestorage.app",
+        messagingSenderId: "1086581951112",
+        appId: "1:1086581951112:web:60bf842c4b2fa5d9936d3d",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+
+      // Product Data
+      const products = [
+        {
+          id: 1,
+          title: "MacBook Pro 16-inch",
+          price: 199999,
+          oldPrice: 219999,
+          rating: 4.9,
+          brand: "apple",
+          category: "laptops",
+          image:
+            "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "Apple M1 Pro chip, 16GB RAM, 512GB SSD, 16.2-inch Liquid Retina XDR display.",
+          badge: "New",
+        },
+        {
+          id: 2,
+          title: "Dell XPS 15",
+          price: 149999,
+          oldPrice: 169999,
+          rating: 4.7,
+          brand: "dell",
+          category: "laptops",
+          image:
+            "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "11th Gen Intel Core i7, 16GB RAM, 512GB SSD, 15.6-inch 4K UHD+ display.",
+        },
+        {
+          id: 3,
+          title: "ASUS ROG Zephyrus G14",
+          price: 129999,
+          oldPrice: 139999,
+          rating: 4.8,
+          brand: "asus",
+          category: "gaming",
+          image:
+            "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "AMD Ryzen 9, 16GB RAM, 1TB SSD, NVIDIA RTX 3060, 14-inch QHD display.",
+          badge: "Popular",
+        },
+        {
+          id: 4,
+          title: "HP Spectre x360",
+          price: 119999,
+          rating: 4.6,
+          brand: "hp",
+          category: "laptops",
+          image:
+            "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "11th Gen Intel Core i7, 16GB RAM, 512GB SSD, 13.5-inch 3K2K OLED touch display.",
+        },
+        {
+          id: 5,
+          title: "Lenovo ThinkPad X1 Carbon",
+          price: 139999,
+          rating: 4.7,
+          brand: "lenovo",
+          category: "laptops",
+          image:
+            "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "11th Gen Intel Core i7, 16GB RAM, 1TB SSD, 14-inch WUXGA display.",
+        },
+        {
+          id: 6,
+          title: "Acer Predator Helios 300",
+          price: 109999,
+          oldPrice: 119999,
+          rating: 4.5,
+          brand: "acer",
+          category: "gaming",
+          image:
+            "https://images.unsplash.com/photo-1593642633279-1796119d5482?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "10th Gen Intel Core i7, 16GB RAM, 512GB SSD, NVIDIA RTX 3060, 15.6-inch FHD IPS display.",
+        },
+        {
+          id: 7,
+          title: "MSI GS66 Stealth",
+          price: 169999,
+          rating: 4.8,
+          brand: "msi",
+          category: "gaming",
+          image:
+            "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "11th Gen Intel Core i9, 32GB RAM, 1TB SSD, NVIDIA RTX 3080, 15.6-inch 4K display.",
+          badge: "Best Seller",
+        },
+        {
+          id: 8,
+          title: "Apple iMac 24-inch",
+          price: 129999,
+          rating: 4.7,
+          brand: "apple",
+          category: "desktops",
+          image:
+            "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "Apple M1 chip, 8GB RAM, 256GB SSD, 24-inch 4.5K Retina display.",
+        },
+        {
+          id: 9,
+          title: "Dell Alienware Aurora R12",
+          price: 179999,
+          oldPrice: 199999,
+          rating: 4.9,
+          brand: "dell",
+          category: "desktops",
+          image:
+            "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "11th Gen Intel Core i9, 32GB RAM, 1TB SSD + 2TB HDD, NVIDIA RTX 3090.",
+          badge: "Deal",
+        },
+        {
+          id: 10,
+          title: "ASUS ProArt PA32UCX",
+          price: 299999,
+          rating: 4.8,
+          brand: "asus",
+          category: "monitors",
+          image:
+            "https://images.unsplash.com/photo-1540932239986-30128078f3c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "32-inch 4K HDR Professional Monitor with Thunderbolt 3, 1200 nits peak brightness.",
+        },
+        {
+          id: 11,
+          title: "Logitech MX Master 3",
+          price: 8999,
+          rating: 4.6,
+          brand: "logitech",
+          category: "accessories",
+          image:
+            "https://images.unsplash.com/photo-1587829741301-dc798b83add3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "Advanced wireless mouse with ultra-fast scrolling and ergonomic design.",
+        },
+        {
+          id: 12,
+          title: "Samsung Odyssey G9",
+          price: 149999,
+          oldPrice: 169999,
+          rating: 4.7,
+          brand: "samsung",
+          category: "monitors",
+          image:
+            "https://images.unsplash.com/photo-1540932239986-30128078f3c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "49-inch Dual QHD Curved Gaming Monitor, 240Hz, 1ms, NVIDIA G-SYNC.",
+          badge: "Sale",
+        },
+      ];
+
+      // Cart and Wishlist
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+      // DOM Elements
+      const navActions = document.getElementById("navActions");
+      const navLinks = document.getElementById("navLinks");
+      const hamburger = document.getElementById("hamburger");
+      const themeToggle = document.getElementById("themeToggle");
+      const body = document.body;
+      const canvas = document.getElementById("starfield");
+      const toastContainer = document.getElementById("toastContainer");
+      const productsGrid = document.getElementById("productsGrid");
+
+      // Initialize the app
+      document.addEventListener("DOMContentLoaded", () => {
+        initStarfield();
+        initThemeToggle();
+        initMobileMenu();
+        renderProducts();
+        updateCartCount();
+        updateWishlistCount();
+        setupAuthStateListener();
+        setupModals();
+        setupEventListeners();
+        setupFilters();
+        showRandomAd();
+      });
+
+      // Starfield Animation
+      function initStarfield() {
+        if (!canvas) return;
+
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const stars = [];
+        const starCount = 200;
+
+        for (let i = 0; i < starCount; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 1.5,
+            speed: Math.random() * 0.5 + 0.1,
+          });
+        }
+
+        function drawStars() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "white";
+
+          stars.forEach((star) => {
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            star.y += star.speed;
+
+            if (star.y > canvas.height) {
+              star.y = 0;
+              star.x = Math.random() * canvas.width;
+            }
+          });
+
+          requestAnimationFrame(drawStars);
+        }
+
+        drawStars();
+
+        window.addEventListener("resize", () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+      }
+
+      // Theme Toggle
+      function initThemeToggle() {
+        if (!themeToggle || !body) return;
+
+        themeToggle.addEventListener("click", () => {
+          const currentTheme = body.getAttribute("data-theme");
+
+          if (currentTheme === "light") {
+            body.removeAttribute("data-theme");
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            localStorage.setItem("theme", "dark");
+          } else {
+            body.setAttribute("data-theme", "light");
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            localStorage.setItem("theme", "light");
+          }
+        });
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "light") {
+          body.setAttribute("data-theme", "light");
+          themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+      }
+
+      // Mobile Menu
+      function initMobileMenu() {
+        if (!hamburger || !navLinks) return;
+
+        hamburger.addEventListener("click", () => {
+          navLinks.classList.toggle("active");
+        });
+      }
+
+      // Format price in Indian Rupees
+      function formatPrice(price) {
+        return new Intl.NumberFormat("en-IN", {
+          style: "currency",
+          currency: "INR",
+          maximumFractionDigits: 0,
+        }).format(price);
+      }
+
+      // Update cart count display
+      function updateCartCount() {
+        const count = cart.reduce((total, item) => total + item.quantity, 0);
+        document.getElementById("cartCount").textContent = count;
+      }
+
+      // Update wishlist count display
+      function updateWishlistCount() {
+        document.getElementById("wishlistCount").textContent = wishlist.length;
+      }
+
+      // Save cart to localStorage
+      function saveCart() {
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartCount();
+      }
+
+      // Save wishlist to localStorage
+      function saveWishlist() {
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+        updateWishlistCount();
+      }
+
+      // Add product to cart
+      function addToCart(productId, quantity = 1) {
+        const product = products.find((p) => p.id === productId);
+        if (!product) return;
+
+        const existingItem = cart.find((item) => item.id === productId);
+
+        if (existingItem) {
+          existingItem.quantity += quantity;
+        } else {
+          cart.push({
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            image: product.image,
+            quantity: quantity,
+          });
+        }
+
+        saveCart();
+        renderCart();
+        showToast(`${product.title} added to cart`, "success");
+      }
+
+      // Remove product from cart
+      function removeFromCart(productId) {
+        const product = products.find((p) => p.id === productId);
+        cart = cart.filter((item) => item.id !== productId);
+        saveCart();
+        renderCart();
+        if (product) {
+          showToast(`${product.title} removed from cart`, "success");
+        }
+      }
+
+      // Update cart item quantity
+      function updateCartItemQuantity(productId, quantity) {
+        const item = cart.find((item) => item.id === productId);
+        if (item) {
+          item.quantity = quantity;
+          saveCart();
+          renderCart();
+        }
+      }
+
+      // Add product to wishlist
+      function addToWishlist(productId) {
+        const product = products.find((p) => p.id === productId);
+        if (!product || wishlist.some((item) => item.id === productId)) return;
+
+        wishlist.push({
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          image: product.image,
+        });
+
+        saveWishlist();
+        renderWishlist();
+        showToast(`${product.title} added to wishlist`, "success");
+      }
+
+      // Remove product from wishlist
+      function removeFromWishlist(productId) {
+        const product = products.find((p) => p.id === productId);
+        wishlist = wishlist.filter((item) => item.id !== productId);
+        saveWishlist();
+        renderWishlist();
+        if (product) {
+          showToast(`${product.title} removed from wishlist`, "success");
+        }
+      }
+
+      // Render products
+      function renderProducts(filteredProducts = products) {
+        if (!productsGrid) return;
+
+        productsGrid.innerHTML = filteredProducts
+          .map(
+            (product) => `
+            <div class="product-card animate-fade" data-category="${
+              product.category
+            }" data-brand="${product.brand}" data-price="${product.price}">
+              ${
+                product.badge
+                  ? `<span class="product-badge">${product.badge}</span>`
+                  : ""
+              }
+              <img src="${product.image}" alt="${
+              product.title
+            }" class="product-image">
+              <div class="product-info">
+                <h3 class="product-title">${product.title}</h3>
+                <div class="product-price">
+                  ${formatPrice(product.price)}
+                  ${
+                    product.oldPrice
+                      ? `<span class="old-price">${formatPrice(
+                          product.oldPrice
+                        )}</span>`
+                      : ""
+                  }
+                </div>
+                <div class="product-rating">
+                  ${'<i class="fas fa-star"></i>'.repeat(
+                    Math.floor(product.rating)
+                  )}
+                  ${
+                    product.rating % 1 >= 0.5
+                      ? '<i class="fas fa-star-half-alt"></i>'
+                      : ""
+                  }
+                  ${'<i class="far fa-star"></i>'.repeat(
+                    5 - Math.ceil(product.rating)
+                  )}
+                  (${product.rating})
+                </div>
+                <div class="product-actions">
+                  <button class="btn btn-primary btn-sm add-to-cart-btn" data-id="${
+                    product.id
+                  }">
+                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                  </button>
+                  <button class="wishlist-btn" data-id="${
+                    product.id
+                  }" title="Add to wishlist">
+                    <i class="${
+                      wishlist.some((item) => item.id === product.id)
+                        ? "fas"
+                        : "far"
+                    } fa-heart"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `
+          )
+          .join("");
+
+        // Add event listeners for product actions
+        document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            if (!auth.currentUser) {
+              showToast("Please login to add items to cart", "error");
+              document.getElementById("loginModal").style.display = "flex";
+              return;
+            }
+            const productId = parseInt(
+              e.target.closest("button").getAttribute("data-id")
+            );
+            addToCart(productId);
+          });
+        });
+
+        document.querySelectorAll(".wishlist-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            if (!auth.currentUser) {
+              showToast("Please login to add items to wishlist", "error");
+              document.getElementById("loginModal").style.display = "flex";
+              return;
+            }
+            const productId = parseInt(
+              e.target.closest("button").getAttribute("data-id")
+            );
+            if (wishlist.some((item) => item.id === productId)) {
+              removeFromWishlist(productId);
+              e.target.innerHTML = '<i class="far fa-heart"></i>';
+            } else {
+              addToWishlist(productId);
+              e.target.innerHTML = '<i class="fas fa-heart"></i>';
+            }
+          });
+        });
+      }
+
+      // Render cart items
+      function renderCart() {
+        const cartItemsContainer = document.getElementById("cartItems");
+        if (!cartItemsContainer) return;
+
+        if (cart.length === 0) {
+          cartItemsContainer.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-shopping-cart"></i>
+              <p>Your cart is empty</p>
+            </div>
+          `;
+          document.getElementById("cartSubtotal").textContent = formatPrice(0);
+          document.getElementById("cartShipping").textContent = formatPrice(0);
+          document.getElementById("cartTax").textContent = formatPrice(0);
+          document.getElementById("cartTotal").textContent = formatPrice(0);
+          return;
+        }
+
+        cartItemsContainer.innerHTML = cart
+          .map(
+            (item) => `
+            <div class="cart-item">
+              <img src="${item.image}" alt="${
+              item.title
+            }" class="cart-item-image">
+              <div class="cart-item-details">
+                <h3 class="cart-item-title">${item.title}</h3>
+                <div class="cart-item-price">${formatPrice(item.price)}</div>
+              </div>
+              <div class="cart-item-actions">
+                <button class="quantity-btn minus" data-id="${
+                  item.id
+                }">-</button>
+                <input type="number" class="quantity-input" value="${
+                  item.quantity
+                }" min="1" data-id="${item.id}">
+                <button class="quantity-btn plus" data-id="${
+                  item.id
+                }">+</button>
+                <button class="remove-item" data-id="${item.id}">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          `
+          )
+          .join("");
+
+        // Calculate totals
+        const subtotal = cart.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+        const shipping = subtotal > 50000 ? 0 : 5000; // Free shipping over ₹50,000
+        const tax = subtotal * 0.18; // 18% tax
+        const total = subtotal + shipping + tax;
+
+        document.getElementById("cartSubtotal").textContent =
+          formatPrice(subtotal);
+        document.getElementById("cartShipping").textContent =
+          formatPrice(shipping);
+        document.getElementById("cartTax").textContent = formatPrice(tax);
+        document.getElementById("cartTotal").textContent = formatPrice(total);
+
+        // Add event listeners for quantity changes
+        document.querySelectorAll(".quantity-btn.minus").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const id = parseInt(e.target.getAttribute("data-id"));
+            const item = cart.find((item) => item.id === id);
+            if (item && item.quantity > 1) {
+              updateCartItemQuantity(id, item.quantity - 1);
+            }
+          });
+        });
+
+        document.querySelectorAll(".quantity-btn.plus").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const id = parseInt(e.target.getAttribute("data-id"));
+            const item = cart.find((item) => item.id === id);
+            if (item) {
+              updateCartItemQuantity(id, item.quantity + 1);
+            }
+          });
+        });
+
+        document.querySelectorAll(".quantity-input").forEach((input) => {
+          input.addEventListener("change", (e) => {
+            const id = parseInt(e.target.getAttribute("data-id"));
+            const quantity = parseInt(e.target.value);
+            if (quantity > 0) {
+              updateCartItemQuantity(id, quantity);
+            }
+          });
+        });
+
+        document.querySelectorAll(".remove-item").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const id = parseInt(
+              e.target.closest("button").getAttribute("data-id")
+            );
+            removeFromCart(id);
+          });
+        });
+      }
+
+      // Show toast notification
+      function showToast(message, type = "success") {
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+          ${message}
+          <span class="toast-close">&times;</span>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+
+        // Manual close
+        toast.querySelector(".toast-close").addEventListener("click", () => {
+          toast.remove();
+        });
+      }
+
+      // Close all modals
+      function closeAllModals() {
+        document.querySelectorAll(".modal").forEach((modal) => {
+          modal.style.display = "none";
+        });
+      }
+
+      // Setup authentication state listener
+      function setupAuthStateListener() {
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            // User is signed in
+            const userDisplayName =
+              user.displayName || user.email.split("@")[0];
+            const userPhotoURL =
+              user.photoURL ||
+              "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+
+            navActions.innerHTML = `
+              <div class="avatar-dropdown">
+                <img src="${userPhotoURL}" alt="${userDisplayName}" class="user-avatar">
+                <div class="dropdown-content">
+                  <a href="#" id="profileBtn">Profile</a>
+                  <a href="purchases.html" id="purchasesBtn">My Purchases</a>
+                  <a href="#" id="logoutBtn">Logout</a>
+                </div>
+              </div>
+              <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+              </button>
+              <div class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+              </div>
+            `;
+
+            // Reinitialize event listeners
+            document
+              .getElementById("profileBtn")
+              ?.addEventListener("click", (e) => {
+                e.preventDefault();
+                showProfileModal(user);
+              });
+
+            document
+              .getElementById("logoutBtn")
+              ?.addEventListener("click", (e) => {
+                e.preventDefault();
+                auth
+                  .signOut()
+                  .then(() => {
+                    showToast("Logged out successfully", "success");
+                  })
+                  .catch((error) => {
+                    showToast("Error signing out: " + error.message, "error");
+                  });
+              });
+
+            // Reinitialize theme toggle
+            document
+              .getElementById("themeToggle")
+              ?.addEventListener("click", () => {
+                const currentTheme = body.getAttribute("data-theme");
+
+                if (currentTheme === "light") {
+                  body.removeAttribute("data-theme");
+                  document.getElementById("themeToggle").innerHTML =
+                    '<i class="fas fa-moon"></i>';
+                  localStorage.setItem("theme", "dark");
+                } else {
+                  body.setAttribute("data-theme", "light");
+                  document.getElementById("themeToggle").innerHTML =
+                    '<i class="fas fa-sun"></i>';
+                  localStorage.setItem("theme", "light");
+                }
+              });
+
+            // Reinitialize hamburger menu
+            document
+              .getElementById("hamburger")
+              ?.addEventListener("click", () => {
+                navLinks.classList.toggle("active");
+              });
+          } else {
+            // User is signed out
+            navActions.innerHTML = `
+              <button class="btn btn-outline" id="loginBtn">Login</button>
+              <button class="btn btn-primary" id="registerBtn">Register</button>
+              <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+              </button>
+              <div class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+              </div>
+            `;
+
+            // Reinitialize event listeners
+            setupModals();
+          }
+        });
+      }
+
+      // Show profile modal
+      function showProfileModal(user) {
+        const profileModal = document.createElement("div");
+        profileModal.className = "modal";
+        profileModal.id = "profileModal";
+        profileModal.innerHTML = `
+          <div class="modal-content profile-modal-content animate-pop">
+            <span class="close-modal">&times;</span>
+            <h2>Your Profile</h2>
+            <div class="profile-header">
+              <img src="${
+                user.photoURL ||
+                "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+              }" 
+                   alt="${user.displayName || "User"}" class="profile-avatar">
+              <div class="profile-info">
+                <h3>${user.displayName || "User"}</h3>
+                <p>${user.email || "No email"}</p>
+              </div>
+            </div>
+            <div class="profile-details">
+              <div class="detail-row">
+                <span class="detail-label">Account Created:</span>
+                <span>${new Date(
+                  user.metadata.creationTime
+                ).toLocaleDateString()}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Last Login:</span>
+                <span>${new Date(
+                  user.metadata.lastSignInTime
+                ).toLocaleDateString()}</span>
+              </div>
+            </div>
+            <button class="btn btn-primary" id="viewPurchasesBtn" style="margin-top: 1rem; width: 100%">
+              View My Purchases
+            </button>
+          </div>
+        `;
+
+        document.body.appendChild(profileModal);
+        profileModal.style.display = "flex";
+
+        // Add event listeners
+        profileModal
+          .querySelector(".close-modal")
+          .addEventListener("click", () => {
+            profileModal.remove();
+          });
+
+        profileModal
+          .querySelector("#viewPurchasesBtn")
+          .addEventListener("click", () => {
+            window.location.href = "purchases.html";
+          });
+
+        // Close when clicking outside
+        profileModal.addEventListener("click", (e) => {
+          if (e.target === profileModal) {
+            profileModal.remove();
+          }
+        });
+      }
+
+      // Setup modals
+      function setupModals() {
+        // Login Modal
+        const loginBtn = document.getElementById("loginBtn");
+        const loginModal = document.getElementById("loginModal");
+
+        if (loginBtn && loginModal) {
+          loginBtn.addEventListener("click", () => {
+            loginModal.style.display = "flex";
+          });
+        }
+
+        // Register Modal
+        const registerBtn = document.getElementById("registerBtn");
+        const registerModal = document.getElementById("registerModal");
+
+        if (registerBtn && registerModal) {
+          registerBtn.addEventListener("click", () => {
+            registerModal.style.display = "flex";
+          });
+        }
+
+        // Switch between login and register
+        const switchToLogin = document.getElementById("switchToLogin");
+        const switchToRegister = document.getElementById("switchToRegister");
+
+        if (switchToLogin && registerModal && loginModal) {
+          switchToLogin.addEventListener("click", (e) => {
+            e.preventDefault();
+            registerModal.style.display = "none";
+            loginModal.style.display = "flex";
+          });
+        }
+
+        if (switchToRegister && loginModal && registerModal) {
+          switchToRegister.addEventListener("click", (e) => {
+            e.preventDefault();
+            loginModal.style.display = "none";
+            registerModal.style.display = "flex";
+          });
+        }
+
+        // Close modals
+        document.querySelectorAll(".close-modal").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            closeAllModals();
+          });
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener("click", (e) => {
+          if (e.target.classList.contains("modal")) {
+            closeAllModals();
+          }
+        });
+      }
+
+      // Setup email/password authentication
+      function setupEmailAuth() {
+        // Login form
+        const loginForm = document.getElementById("loginForm");
+        if (loginForm) {
+          loginForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+            const loginBtnText = document.getElementById("loginBtnText");
+            const loginSpinner = document.getElementById("loginSpinner");
+
+            loginBtnText.style.display = "none";
+            loginSpinner.style.display = "inline-block";
+
+            auth
+              .signInWithEmailAndPassword(email, password)
+              .then(() => {
+                closeAllModals();
+                showToast("Logged in successfully", "success");
+              })
+              .catch((error) => {
+                showToast("Login error: " + error.message, "error");
+              })
+              .finally(() => {
+                loginBtnText.style.display = "inline";
+                loginSpinner.style.display = "none";
+              });
+          });
+        }
+
+        // Register form
+        const registerForm = document.getElementById("registerForm");
+        if (registerForm) {
+          registerForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const name = document.getElementById("registerName").value;
+            const email = document.getElementById("registerEmail").value;
+            const password = document.getElementById("registerPassword").value;
+            const confirmPassword =
+              document.getElementById("registerConfirm").value;
+            const registerBtnText = document.getElementById("registerBtnText");
+            const registerSpinner = document.getElementById("registerSpinner");
+
+            if (password !== confirmPassword) {
+              showToast("Passwords don't match", "error");
+              return;
+            }
+
+            registerBtnText.style.display = "none";
+            registerSpinner.style.display = "inline-block";
+
+            auth
+              .createUserWithEmailAndPassword(email, password)
+              .then((userCredential) => {
+                return userCredential.user.updateProfile({
+                  displayName: name,
+                });
+              })
+              .then(() => {
+                closeAllModals();
+                showToast("Account created successfully", "success");
+              })
+              .catch((error) => {
+                showToast("Registration error: " + error.message, "error");
+              })
+              .finally(() => {
+                registerBtnText.style.display = "inline";
+                registerSpinner.style.display = "none";
+              });
+          });
+        }
+      }
+
+      // Setup Google authentication
+      function setupGoogleAuth() {
+        const googleLoginBtn = document.getElementById("googleLoginBtn");
+        const googleRegisterBtn = document.getElementById("googleRegisterBtn");
+
+        const handleGoogleAuth = () => {
+          const provider = new firebase.auth.GoogleAuthProvider();
+
+          auth
+            .signInWithPopup(provider)
+            .then(() => {
+              closeAllModals();
+              showToast("Logged in with Google successfully", "success");
+            })
+            .catch((error) => {
+              showToast("Google login error: " + error.message, "error");
+            });
+        };
+
+        if (googleLoginBtn)
+          googleLoginBtn.addEventListener("click", handleGoogleAuth);
+        if (googleRegisterBtn)
+          googleRegisterBtn.addEventListener("click", handleGoogleAuth);
+      }
+
+      // Setup Facebook authentication
+      function setupFacebookAuth() {
+        const facebookLoginBtn = document.getElementById("facebookLoginBtn");
+        const facebookRegisterBtn = document.getElementById(
+          "facebookRegisterBtn"
+        );
+
+        const handleFacebookAuth = () => {
+          const provider = new firebase.auth.FacebookAuthProvider();
+
+          auth
+            .signInWithPopup(provider)
+            .then(() => {
+              closeAllModals();
+              showToast("Logged in with Facebook successfully", "success");
+            })
+            .catch((error) => {
+              showToast("Facebook login error: " + error.message, "error");
+            });
+        };
+
+        if (facebookLoginBtn)
+          facebookLoginBtn.addEventListener("click", handleFacebookAuth);
+        if (facebookRegisterBtn)
+          facebookRegisterBtn.addEventListener("click", handleFacebookAuth);
+      }
+
+      // Setup phone authentication
+      function setupPhoneAuth() {
+        const phoneLoginBtn = document.getElementById("phoneLoginBtn");
+        const phoneRegisterBtn = document.getElementById("phoneRegisterBtn");
+        const phoneAuthModal = document.getElementById("phoneAuthModal");
+        const phoneAuthForm = document.getElementById("phoneAuthForm");
+        const phoneAuthBtn = document.getElementById("phoneAuthBtn");
+        const phoneAuthBtnText = document.getElementById("phoneAuthBtnText");
+        const phoneAuthSpinner = document.getElementById("phoneAuthSpinner");
+        const verificationCodeGroup = document.getElementById(
+          "verificationCodeGroup"
+        );
+        const recaptchaContainer =
+          document.getElementById("recaptchaContainer");
+
+        let confirmationResult = null;
+        let recaptchaVerifier = null;
+
+        const handlePhoneAuthClick = () => {
+          closeAllModals();
+          phoneAuthModal.style.display = "flex";
+
+          // Initialize reCAPTCHA
+          recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+            recaptchaContainer,
+            {
+              size: "normal",
+              callback: (response) => {
+                // reCAPTCHA solved, allow phone auth
+              },
+              "expired-callback": () => {
+                showToast("reCAPTCHA expired. Please try again.", "error");
+              },
+            }
+          );
+
+          recaptchaVerifier.render();
+        };
+
+        if (phoneLoginBtn)
+          phoneLoginBtn.addEventListener("click", handlePhoneAuthClick);
+        if (phoneRegisterBtn)
+          phoneRegisterBtn.addEventListener("click", handlePhoneAuthClick);
+
+        if (phoneAuthForm) {
+          phoneAuthForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const phoneNumber = document.getElementById("phoneNumber").value;
+            const verificationCode =
+              document.getElementById("verificationCode").value;
+
+            phoneAuthBtnText.style.display = "none";
+            phoneAuthSpinner.style.display = "inline-block";
+
+            if (!confirmationResult) {
+              // Step 1: Send verification code
+              auth
+                .signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
+                .then((result) => {
+                  confirmationResult = result;
+                  verificationCodeGroup.style.display = "block";
+                  phoneAuthBtnText.textContent = "Verify Code";
+                  showToast("Verification code sent to your phone", "success");
+                })
+                .catch((error) => {
+                  showToast(
+                    "Error sending verification code: " + error.message,
+                    "error"
+                  );
+                })
+                .finally(() => {
+                  phoneAuthBtnText.style.display = "inline";
+                  phoneAuthSpinner.style.display = "none";
+                });
+            } else {
+              // Step 2: Verify code
+              confirmationResult
+                .confirm(verificationCode)
+                .then(() => {
+                  closeAllModals();
+                  showToast("Phone authentication successful", "success");
+                })
+                .catch((error) => {
+                  showToast("Error verifying code: " + error.message, "error");
+                })
+                .finally(() => {
+                  phoneAuthBtnText.style.display = "inline";
+                  phoneAuthSpinner.style.display = "none";
+                });
+            }
+          });
+        }
+
+        // Close phone auth modal
+        document
+          .querySelector(".phone-auth-modal .close-modal")
+          ?.addEventListener("click", () => {
+            phoneAuthModal.style.display = "none";
+            confirmationResult = null;
+            verificationCodeGroup.style.display = "none";
+            phoneAuthBtnText.textContent = "Send Verification Code";
+
+            // Clear reCAPTCHA
+            if (recaptchaVerifier) {
+              recaptchaVerifier.clear();
+              recaptchaVerifier = null;
+            }
+          });
+      }
+
+      // Setup filters
+      function setupFilters() {
+        const categoryFilter = document.getElementById("categoryFilter");
+        const priceFilter = document.getElementById("priceFilter");
+        const brandFilter = document.getElementById("brandFilter");
+        const searchInput = document.getElementById("searchInput");
+
+        const applyFilters = () => {
+          const category = categoryFilter.value;
+          const priceRange = priceFilter.value;
+          const brand = brandFilter.value;
+          const searchTerm = searchInput.value.toLowerCase();
+
+          let filteredProducts = products;
+
+          // Apply category filter
+          if (category !== "all") {
+            filteredProducts = filteredProducts.filter(
+              (product) => product.category === category
+            );
+          }
+
+          // Apply brand filter
+          if (brand !== "all") {
+            filteredProducts = filteredProducts.filter(
+              (product) => product.brand === brand
+            );
+          }
+
+          // Apply price filter
+          if (priceRange !== "all") {
+            const [min, max] = priceRange.split("-").map(Number);
+            if (priceRange.endsWith("+")) {
+              filteredProducts = filteredProducts.filter(
+                (product) => product.price >= min
+              );
+            } else {
+              filteredProducts = filteredProducts.filter(
+                (product) => product.price >= min && product.price <= max
+              );
+            }
+          }
+
+          // Apply search filter
+          if (searchTerm) {
+            filteredProducts = filteredProducts.filter(
+              (product) =>
+                product.title.toLowerCase().includes(searchTerm) ||
+                product.description.toLowerCase().includes(searchTerm)
+            );
+          }
+
+          renderProducts(filteredProducts);
+        };
+
+        categoryFilter.addEventListener("change", applyFilters);
+        priceFilter.addEventListener("change", applyFilters);
+        brandFilter.addEventListener("change", applyFilters);
+        searchInput.addEventListener("input", applyFilters);
+      }
+
+      // Show random ad
+      function showRandomAd() {
+        const ads = [
+          {
+            image:
+              "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+            title: "Limited Time Offer!",
+            text: "Get 20% off on all gaming laptops this weekend. Use code <strong>GAME20</strong> at checkout.",
+            buttonText: "Shop Now",
+          },
+          {
+            image:
+              "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+            title: "New Arrivals",
+            text: "Check out our latest collection of premium laptops with cutting-edge technology.",
+            buttonText: "Explore",
+          },
+          {
+            image:
+              "https://images.unsplash.com/photo-1546054454-aa26e2b734c7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+            title: "Back to School Sale",
+            text: "Special discounts for students and educators. Verify your status to unlock exclusive deals.",
+            buttonText: "Learn More",
+          },
+        ];
+
+        // Show ad after 30 seconds
+        setTimeout(() => {
+          const randomAd = ads[Math.floor(Math.random() * ads.length)];
+          const adModal = document.getElementById("adModal");
+          const adContent = adModal.querySelector(".ad-content");
+
+          adContent.querySelector(".ad-image").src = randomAd.image;
+          adContent.querySelector("h3").textContent = randomAd.title;
+          adContent.querySelector("p").innerHTML = randomAd.text;
+          adContent.querySelector("#shopNowAd").textContent =
+            randomAd.buttonText;
+
+          adModal.style.display = "flex";
+        }, 30000);
+
+        // Close ad
+        document.getElementById("closeAd").addEventListener("click", () => {
+          document.getElementById("adModal").style.display = "none";
+        });
+
+        document.getElementById("laterAd").addEventListener("click", () => {
+          document.getElementById("adModal").style.display = "none";
+        });
+
+        document.getElementById("shopNowAd").addEventListener("click", () => {
+          document.getElementById("adModal").style.display = "none";
+          window.location.href = "#products";
+        });
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        // Cart button
+        document.getElementById("cartBtn")?.addEventListener("click", () => {
+          if (!auth.currentUser) {
+            showToast("Please login to view your cart", "error");
+            document.getElementById("loginModal").style.display = "flex";
+            return;
+          }
+          renderCart();
+          document.getElementById("cartModal").style.display = "flex";
+        });
+
+        // Wishlist button
+        document
+          .getElementById("wishlistBtn")
+          ?.addEventListener("click", () => {
+            if (!auth.currentUser) {
+              showToast("Please login to view your wishlist", "error");
+              document.getElementById("loginModal").style.display = "flex";
+              return;
+            }
+            document.getElementById("wishlistModal").style.display = "flex";
+          });
+
+        // Support button
+        document.getElementById("supportBtn")?.addEventListener("click", () => {
+          document.getElementById("supportModal").style.display = "flex";
+        });
+
+        // Checkout button
+        document
+          .getElementById("checkoutBtn")
+          ?.addEventListener("click", () => {
+            if (cart.length === 0) {
+              showToast("Your cart is empty", "error");
+              return;
+            }
+            window.location.href = "checkout.html";
+          });
+
+        // Email/password auth
+        setupEmailAuth();
+
+        // Social auth
+        setupGoogleAuth();
+        setupFacebookAuth();
+
+        // Phone auth
+        setupPhoneAuth();
+      }
+    </script>
+  </body>
+</html>

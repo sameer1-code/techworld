@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechWorld - Computer Brands</title>
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- CSS -->
+    <style>
+      :root {
+        --primary-dark: #0a192f;
+        --primary-light: #64ffda;
+        --secondary-dark: #172a45;
+        --secondary-light: #ccd6f6;
+        --text-light: #e6f1ff;
+        --text-dark: #8892b0;
+        --accent: #1e90ff;
+        --card-bg: rgba(23, 42, 69, 0.7);
+        --error: #ff6b6b;
+        --success: #64ffda;
+      }
+
+      [data-theme="light"] {
+        --primary-dark: #f8f9fa;
+        --primary-light: #1e90ff;
+        --secondary-dark: #e9ecef;
+        --secondary-light: #495057;
+        --text-light: #212529;
+        --text-dark: #6c757d;
+        --accent: #1a73e8;
+        --card-bg: rgba(233, 236, 239, 0.8);
+        --error: #dc3545;
+        --success: #28a745;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      body {
+        color: var(--text-light);
+        background-color: var(--primary-dark);
+        overflow-x: hidden;
+      }
+
+      /* Navigation */
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 5%;
+        background-color: rgba(10, 25, 47, 0.9);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+
+      .logo i {
+        margin-right: 0.5rem;
+        color: var(--accent);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 500;
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--primary-light);
+        transition: width 0.3s;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 5px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--primary-light);
+        color: var(--primary-light);
+      }
+
+      .btn-primary:hover,
+      .btn-outline:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .theme-toggle {
+        background: none;
+        border: none;
+        color: var(--text-light);
+        font-size: 1.2rem;
+        cursor: pointer;
+        margin-left: 1rem;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid var(--primary-light);
+      }
+
+      .avatar-dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: var(--secondary-dark);
+        min-width: 160px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .dropdown-content a {
+        color: var(--text-light);
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .avatar-dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .hamburger {
+        display: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+
+      /* Main Content */
+      .container {
+        display: flex;
+        min-height: calc(100vh - 80px);
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 280px;
+        padding: 2rem 1rem;
+        background-color: var(--secondary-dark);
+        position: sticky;
+        top: 80px;
+        height: calc(100vh - 80px);
+        overflow-y: auto;
+      }
+
+      .sidebar-section {
+        margin-bottom: 2rem;
+      }
+
+      .sidebar-title {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: var(--primary-light);
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--text-dark);
+      }
+
+      .filter-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .filter-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .filter-options {
+        margin-top: 0.5rem;
+      }
+
+      .filter-option {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .filter-option input {
+        margin-right: 0.5rem;
+      }
+
+      .price-range {
+        width: 100%;
+        margin-top: 1rem;
+      }
+
+      .price-inputs {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.5rem;
+      }
+
+      .price-inputs input {
+        width: 48%;
+        padding: 0.5rem;
+        border-radius: 5px;
+        border: 1px solid var(--text-dark);
+        background-color: transparent;
+        color: var(--text-light);
+      }
+
+      .reset-filters {
+        width: 100%;
+        padding: 0.5rem;
+        background-color: var(--primary-dark);
+        color: var(--text-light);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 1rem;
+      }
+
+      /* Main Content Area */
+      .main-content {
+        flex: 1;
+        padding: 2rem;
+      }
+
+      .search-bar {
+        display: flex;
+        margin-bottom: 2rem;
+      }
+
+      .search-input {
+        flex: 1;
+        padding: 0.8rem 1rem;
+        border-radius: 5px 0 0 5px;
+        border: 1px solid var(--text-dark);
+        background-color: transparent;
+        color: var(--text-light);
+      }
+
+      .search-btn {
+        padding: 0 1.5rem;
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        border: none;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+      }
+
+      .brands-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .section-title {
+        font-size: 2rem;
+        color: var(--primary-light);
+      }
+
+      .sort-options {
+        display: flex;
+        align-items: center;
+      }
+
+      .sort-options select {
+        padding: 0.5rem;
+        border-radius: 5px;
+        background-color: transparent;
+        color: var(--text-light);
+        border: 1px solid var(--text-dark);
+        margin-left: 0.5rem;
+      }
+
+      .brands-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .brand-card {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s;
+        cursor: pointer;
+      }
+
+      .brand-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .brand-image {
+        width: 100%;
+        height: 150px;
+        object-fit: contain;
+        background-color: white;
+        padding: 1rem;
+      }
+
+      .brand-info {
+        padding: 1.5rem;
+      }
+
+      .brand-name {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .product-count {
+        color: var(--text-dark);
+        font-size: 0.9rem;
+      }
+
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+      }
+
+      .product-card {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s;
+        position: relative;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: contain;
+        background-color: white;
+        padding: 1rem;
+      }
+
+      .product-info {
+        padding: 1.5rem;
+      }
+
+      .product-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        height: 3rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+
+      .product-price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        margin-bottom: 0.5rem;
+      }
+
+      .product-rating {
+        color: #ffc107;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .product-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      .wishlist-btn {
+        background: none;
+        border: none;
+        color: var(--text-light);
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 3rem;
+        gap: 0.5rem;
+      }
+
+      .page-btn {
+        padding: 0.5rem 1rem;
+        background-color: var(--secondary-dark);
+        color: var(--text-light);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .page-btn.active {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      /* Toast Notification */
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1100;
+      }
+
+      .toast {
+        padding: 1rem 1.5rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .toast-success {
+        background-color: var(--success);
+        color: var(--primary-dark);
+      }
+
+      .toast-error {
+        background-color: var(--error);
+        color: white;
+      }
+
+      .toast-close {
+        margin-left: 1rem;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+
+      /* Ad Banner */
+      .ad-banner {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--secondary-dark);
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        max-width: 90%;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      .ad-banner img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+
+      .ad-content {
+        flex: 1;
+      }
+
+      .ad-title {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .ad-close {
+        background: none;
+        border: none;
+        color: var(--text-dark);
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateX(-50%) translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(-50%) translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background-color: var(--secondary-dark);
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      /* Login Modal */
+      .social-login {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin: 1rem 0;
+      }
+
+      .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s;
+      }
+
+      .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .google-btn {
+        background-color: #fff;
+        color: #757575;
+      }
+
+      .facebook-btn {
+        background-color: #3b5998;
+        color: white;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        margin: 1rem 0;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid var(--text-dark);
+      }
+
+      .divider-text {
+        padding: 0 1rem;
+        color: var(--text-dark);
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 5px;
+        border: 1px solid var(--text-dark);
+        background-color: transparent;
+        color: var(--text-light);
+      }
+
+      .form-submit {
+        width: 100%;
+        padding: 0.8rem;
+        margin-top: 1rem;
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      /* Discount Badge */
+      .discount-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: var(--error);
+        color: white;
+        padding: 0.3rem 0.6rem;
+        border-radius: 5px;
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
+
+      /* AI Tool */
+      .ai-tool {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background-color: var(--primary-light);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        z-index: 100;
+      }
+
+      .ai-tool i {
+        font-size: 1.5rem;
+        color: var(--primary-dark);
+      }
+
+      .ai-chat-container {
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 350px;
+        max-height: 500px;
+        background-color: var(--secondary-dark);
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        display: none;
+        flex-direction: column;
+        z-index: 100;
+      }
+
+      .ai-chat-header {
+        padding: 1rem;
+        background-color: var(--primary-dark);
+        border-radius: 10px 10px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .ai-chat-messages {
+        flex: 1;
+        padding: 1rem;
+        overflow-y: auto;
+      }
+
+      .ai-chat-input {
+        display: flex;
+        padding: 1rem;
+        border-top: 1px solid var(--text-dark);
+      }
+
+      .ai-chat-input input {
+        flex: 1;
+        padding: 0.8rem;
+        border-radius: 5px 0 0 5px;
+        border: 1px solid var(--text-dark);
+        background-color: transparent;
+        color: var(--text-light);
+      }
+
+      .ai-chat-input button {
+        padding: 0 1rem;
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        border: none;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+      }
+
+      /* Mobile Styles */
+      @media (max-width: 992px) {
+        .container {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: static;
+          padding: 1rem;
+        }
+
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background-color: var(--secondary-dark);
+          flex-direction: column;
+          padding: 1rem 5%;
+          gap: 1rem;
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .hamburger {
+          display: block;
+        }
+
+        .ad-banner {
+          flex-direction: column;
+          text-align: center;
+          width: 90%;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .brands-grid {
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+
+        .products-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .brands-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+
+        .sort-options {
+          width: 100%;
+        }
+
+        .sort-options select {
+          flex: 1;
+        }
+
+        .ai-chat-container {
+          width: 90%;
+          right: 5%;
+        }
+      }
+    </style>
+  </head>
+  <body ng-app="techWorldApp" ng-controller="MainController as mainCtrl">
+    <div id="root"></div>
+
+    <!-- Firebase configuration -->
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyDxlEFhfp8yQw2F8R5enY0F2Dw5dtlSqjU",
+        authDomain: "techworld-497d8.firebaseapp.com",
+        projectId: "techworld-497d8",
+        storageBucket: "techworld-497d8.appspot.com",
+        messagingSenderId: "1086581951112",
+        appId: "1:1086581951112:web:60bf842c4b2fa5d9936d3d",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+    </script>
+
+    <!-- AngularJS App -->
+    <script>
+      angular
+        .module("techWorldApp", [])
+        .controller("MainController", function ($scope, $timeout, $interval) {
+          const vm = this;
+
+          // Initialize variables
+          vm.user = null;
+          vm.theme = localStorage.getItem("theme") || "dark";
+          vm.mobileMenuOpen = false;
+          vm.showLoginModal = false;
+          vm.showRegisterModal = false;
+          vm.activeBrand = null;
+          vm.searchQuery = "";
+          vm.sortOption = "featured";
+          vm.currentPage = 1;
+          vm.productsPerPage = 12;
+          vm.toasts = [];
+          vm.showAIChat = false;
+          vm.aiMessages = [];
+          vm.aiInput = "";
+          vm.cart = [];
+          vm.browsingHistory = [];
+
+          // Format price in Indian Rupees
+          vm.formatPrice = (price) => {
+            return new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+              maximumFractionDigits: 0,
+            }).format(price);
+          };
+
+          // Show toast notification
+          vm.showToast = (message, type = "success") => {
+            const id = Date.now();
+            vm.toasts.push({ id, message, type });
+
+            // Auto remove after 3 seconds
+            $timeout(() => {
+              vm.removeToast(id);
+            }, 3000);
+          };
+
+          // Remove toast
+          vm.removeToast = (id) => {
+            vm.toasts = vm.toasts.filter((toast) => toast.id !== id);
+          };
+
+          // Close all modals
+          vm.closeAllModals = () => {
+            vm.showLoginModal = false;
+            vm.showRegisterModal = false;
+          };
+
+          // Toggle theme
+          vm.toggleTheme = () => {
+            vm.theme = vm.theme === "light" ? "dark" : "light";
+            localStorage.setItem("theme", vm.theme);
+            applyTheme();
+          };
+
+          // Apply theme to body
+          const applyTheme = () => {
+            if (vm.theme === "light") {
+              document.body.setAttribute("data-theme", "light");
+            } else {
+              document.body.removeAttribute("data-theme");
+            }
+          };
+
+          // Toggle mobile menu
+          vm.toggleMobileMenu = () => {
+            vm.mobileMenuOpen = !vm.mobileMenuOpen;
+          };
+
+          // Handle login
+          vm.handleLogin = (email, password) => {
+            return auth
+              .signInWithEmailAndPassword(email, password)
+              .then(() => {
+                vm.closeAllModals();
+                vm.showToast("Logged in successfully", "success");
+              })
+              .catch((error) => {
+                vm.showToast("Login error: " + error.message, "error");
+                throw error;
+              });
+          };
+
+          // Handle register
+          vm.handleRegister = (name, email, password) => {
+            return auth
+              .createUserWithEmailAndPassword(email, password)
+              .then((userCredential) => {
+                return userCredential.user.updateProfile({
+                  displayName: name,
+                });
+              })
+              .then(() => {
+                vm.closeAllModals();
+                vm.showToast("Account created successfully", "success");
+              })
+              .catch((error) => {
+                vm.showToast("Registration error: " + error.message, "error");
+                throw error;
+              });
+          };
+
+          // Handle logout
+          vm.handleLogout = () => {
+            auth
+              .signOut()
+              .then(() => {
+                vm.showToast("Logged out successfully", "success");
+                vm.cart = [];
+              })
+              .catch((error) => {
+                vm.showToast("Error signing out: " + error.message, "error");
+              });
+          };
+
+          // Brand data (14 brands)
+          vm.brands = [
+            {
+              id: "brand1",
+              name: "Apple",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+              description: "Premium technology products",
+            },
+            {
+              id: "brand2",
+              name: "Dell",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/1/18/Dell_logo_2016.svg",
+              description: "Reliable computers for work and play",
+            },
+            {
+              id: "brand3",
+              name: "HP",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/a/ad/HP_logo_2012.svg",
+              description: "Innovative computing solutions",
+            },
+            {
+              id: "brand4",
+              name: "Lenovo",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Lenovo_logo_2015.svg",
+              description: "Smart technology for smart people",
+            },
+            {
+              id: "brand5",
+              name: "Asus",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/2/2e/ASUS_Logo.svg",
+              description: "Innovative and high-performance laptops",
+            },
+            {
+              id: "brand6",
+              name: "Acer",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Acer_logo.svg",
+              description: "Affordable computing solutions",
+            },
+            {
+              id: "brand7",
+              name: "MSI",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/3/34/MSI_logo.svg",
+              description: "Gaming and productivity laptops",
+            },
+            {
+              id: "brand8",
+              name: "Samsung",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg",
+              description: "Innovative technology products",
+            },
+            {
+              id: "brand9",
+              name: "Microsoft",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg",
+              description: "Surface devices and accessories",
+            },
+            {
+              id: "brand10",
+              name: "Razer",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/e/e1/Razer_snake_logo.svg",
+              description: "Premium gaming laptops",
+            },
+            {
+              id: "brand11",
+              name: "Alienware",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Alienware_logo.svg",
+              description: "High-performance gaming systems",
+            },
+            {
+              id: "brand12",
+              name: "LG",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/LG_symbol.svg",
+              description: "Innovative computing solutions",
+            },
+            {
+              id: "brand13",
+              name: "Toshiba",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/2/28/Toshiba_logo.svg",
+              description: "Reliable laptops and accessories",
+            },
+            {
+              id: "brand14",
+              name: "Sony",
+              logo: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Sony_logo.svg",
+              description: "Premium VAIO laptops",
+            },
+          ];
+
+          // Product data (24 products per brand)
+          vm.products = [];
+
+          // Categories
+          const categories = [
+            "Laptop",
+            "Desktop",
+            "Tablet",
+            "Monitor",
+            "Accessory",
+            "Gaming",
+          ];
+
+          // Generate products for each brand
+          vm.brands.forEach((brand) => {
+            for (let i = 1; i <= 24; i++) {
+              const discount =
+                Math.random() > 0.7 ? Math.floor(Math.random() * 30) + 10 : 0;
+              const originalPrice = Math.floor(Math.random() * 200000) + 20000;
+              const discountedPrice =
+                discount > 0
+                  ? Math.floor(originalPrice * (1 - discount / 100))
+                  : originalPrice;
+
+              vm.products.push({
+                id: `${brand.id}-product${i}`,
+                name: `${brand.name} ${categories[i % categories.length]} ${i}`,
+                brandId: brand.id,
+                brandName: brand.name,
+                category: categories[i % categories.length],
+                price: discountedPrice,
+                originalPrice: discount > 0 ? originalPrice : null,
+                discount: discount > 0 ? discount : null,
+                rating: (Math.random() * 2 + 3).toFixed(1),
+                image: getProductImage(
+                  brand.name,
+                  categories[i % categories.length],
+                  i
+                ),
+                description: `High-performance ${brand.name} ${
+                  categories[i % categories.length]
+                } with premium features.`,
+                specs: {
+                  processor: `Processor ${i}`,
+                  ram: `${8 + (i % 4) * 4}GB`,
+                  storage: `${256 + (i % 5) * 256}GB SSD`,
+                  display: `${13 + (i % 4)} inch`,
+                },
+                createdAt: Date.now() - Math.floor(Math.random() * 1000000000),
+              });
+            }
+          });
+
+          // Function to get product images (using placeholder images)
+          function getProductImage(brand, category, index) {
+            const baseUrl = "https://via.placeholder.com/300x300";
+            const colors = [
+              "007bff",
+              "28a745",
+              "dc3545",
+              "fd7e14",
+              "6f42c1",
+              "20c997",
+            ];
+            const color = colors[index % colors.length];
+            return `${baseUrl}/${color}/ffffff?text=${brand}+${category}+${index}`;
+          }
+
+          // Filtered products
+          vm.filteredProducts = vm.products;
+
+          // Filters
+          vm.filters = {
+            categories: [],
+            priceRange: [0, 500000],
+            brands: [],
+            ratings: [],
+          };
+
+          // Get unique categories
+          vm.getUniqueCategories = () => {
+            return [...new Set(vm.products.map((product) => product.category))];
+          };
+
+          // Handle brand click
+          vm.handleBrandClick = (brand) => {
+            vm.activeBrand = brand;
+            vm.browsingHistory.push({
+              type: "brand",
+              id: brand.id,
+              name: brand.name,
+              timestamp: Date.now(),
+            });
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            vm.applyFilters();
+          };
+
+          // Handle filter change
+          vm.handleFilterChange = (filterType, value) => {
+            if (filterType === "priceRange") {
+              vm.filters.priceRange = value;
+            } else {
+              const index = vm.filters[filterType].indexOf(value);
+              if (index === -1) {
+                vm.filters[filterType].push(value);
+              } else {
+                vm.filters[filterType].splice(index, 1);
+              }
+            }
+            vm.applyFilters();
+          };
+
+          // Apply all filters
+          vm.applyFilters = () => {
+            let result = [...vm.products];
+
+            // Apply search filter
+            if (vm.searchQuery) {
+              result = result.filter(
+                (product) =>
+                  product.name
+                    .toLowerCase()
+                    .includes(vm.searchQuery.toLowerCase()) ||
+                  product.brandName
+                    .toLowerCase()
+                    .includes(vm.searchQuery.toLowerCase()) ||
+                  product.category
+                    .toLowerCase()
+                    .includes(vm.searchQuery.toLowerCase())
+              );
+            }
+
+            // Apply brand filter if viewing a specific brand
+            if (vm.activeBrand) {
+              result = result.filter(
+                (product) => product.brandId === vm.activeBrand.id
+              );
+            }
+
+            // Apply category filter
+            if (vm.filters.categories.length > 0) {
+              result = result.filter((product) =>
+                vm.filters.categories.includes(product.category)
+              );
+            }
+
+            // Apply brand filter from sidebar
+            if (vm.filters.brands.length > 0) {
+              result = result.filter((product) =>
+                vm.filters.brands.includes(product.brandId)
+              );
+            }
+
+            // Apply price filter
+            result = result.filter(
+              (product) =>
+                product.price >= vm.filters.priceRange[0] &&
+                product.price <= vm.filters.priceRange[1]
+            );
+
+            // Apply rating filter
+            if (vm.filters.ratings.length > 0) {
+              result = result.filter((product) =>
+                vm.filters.ratings.some(
+                  (rating) => parseFloat(product.rating) >= rating
+                )
+              );
+            }
+
+            // Apply sorting
+            switch (vm.sortOption) {
+              case "price-low":
+                result.sort((a, b) => a.price - b.price);
+                break;
+              case "price-high":
+                result.sort((a, b) => b.price - a.price);
+                break;
+              case "rating":
+                result.sort((a, b) => b.rating - a.rating);
+                break;
+              case "newest":
+                result.sort((a, b) => b.createdAt - a.createdAt);
+                break;
+              default:
+                // Featured (default sorting)
+                break;
+            }
+
+            vm.filteredProducts = result;
+            vm.currentPage = 1; // Reset to first page when filters change
+          };
+
+          // Reset all filters
+          vm.resetFilters = () => {
+            vm.filters = {
+              categories: [],
+              priceRange: [0, 500000],
+              brands: [],
+              ratings: [],
+            };
+            vm.searchQuery = "";
+            vm.sortOption = "featured";
+            vm.applyFilters();
+          };
+
+          // Handle add to cart
+          vm.addToCart = (product) => {
+            if (!vm.user) {
+              vm.showLoginModal = true;
+              vm.showToast("Please login to add items to cart", "error");
+              return;
+            }
+
+            const existingItem = vm.cart.find(
+              (item) => item.product.id === product.id
+            );
+            if (existingItem) {
+              existingItem.quantity++;
+            } else {
+              vm.cart.push({
+                product: product,
+                quantity: 1,
+              });
+            }
+
+            // Add to browsing history
+            vm.browsingHistory.push({
+              type: "product",
+              id: product.id,
+              name: product.name,
+              timestamp: Date.now(),
+            });
+
+            vm.showToast(`${product.name} added to cart`, "success");
+
+            // Save cart to localStorage
+            localStorage.setItem("cart", JSON.stringify(vm.cart));
+
+            // Save to Firestore if user is logged in
+            if (vm.user) {
+              db.collection("users").doc(vm.user.uid).set(
+                {
+                  cart: vm.cart,
+                },
+                { merge: true }
+              );
+            }
+          };
+
+          // Handle checkout
+          vm.handleCheckout = () => {
+            if (!vm.user) {
+              vm.showLoginModal = true;
+              vm.showToast("Please login to proceed to checkout", "error");
+              return;
+            }
+            window.location.href = "checkout.html";
+          };
+
+          // Get cart count
+          vm.getCartCount = () => {
+            return vm.cart.reduce((total, item) => total + item.quantity, 0);
+          };
+
+          // Get cart total
+          vm.getCartTotal = () => {
+            return vm.cart.reduce(
+              (total, item) => total + item.product.price * item.quantity,
+              0
+            );
+          };
+
+          // Toggle AI chat
+          vm.toggleAIChat = () => {
+            vm.showAIChat = !vm.showAIChat;
+            if (vm.showAIChat && vm.aiMessages.length === 0) {
+              vm.aiMessages.push({
+                text: "Hello! I'm your TechWorld assistant. How can I help you today? You can ask me about product recommendations, specifications, or current offers.",
+                sender: "ai",
+                timestamp: new Date(),
+              });
+            }
+          };
+
+          // Send AI message
+          vm.sendAIMessage = () => {
+            if (!vm.aiInput.trim()) return;
+
+            const userMessage = {
+              text: vm.aiInput,
+              sender: "user",
+              timestamp: new Date(),
+            };
+
+            vm.aiMessages.push(userMessage);
+            vm.aiInput = "";
+
+            // Simulate AI response
+            $timeout(() => {
+              const aiResponse = {
+                text: getAIResponse(userMessage.text),
+                sender: "ai",
+                timestamp: new Date(),
+              };
+
+              vm.aiMessages.push(aiResponse);
+
+              // Scroll to bottom
+              const chatContainer = document.querySelector(".ai-chat-messages");
+              if (chatContainer) {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+              }
+            }, 1000);
+          };
+
+          // Get AI response (simulated)
+          const getAIResponse = (input) => {
+            input = input.toLowerCase();
+
+            if (input.includes("hello") || input.includes("hi")) {
+              return "Hello! How can I assist you with your tech needs today?";
+            } else if (
+              input.includes("recommend") ||
+              input.includes("suggest")
+            ) {
+              // Get recommendations based on browsing history
+              const recommendedProducts = getRecommendedProducts();
+              if (recommendedProducts.length > 0) {
+                return `Based on your browsing history, I recommend: ${recommendedProducts
+                  .slice(0, 3)
+                  .map((p) => p.name)
+                  .join(
+                    ", "
+                  )}. Would you like more details about any of these?`;
+              } else {
+                return "I recommend checking out our latest laptops and gaming PCs. Is there a specific category you're interested in?";
+              }
+            } else if (input.includes("price") || input.includes("cost")) {
+              return "Our prices are very competitive. You can use the filters to find products within your budget. Would you like me to show you some affordable options?";
+            } else if (input.includes("discount") || input.includes("offer")) {
+              const discountedProducts = vm.products
+                .filter((p) => p.discount > 0)
+                .slice(0, 3);
+              if (discountedProducts.length > 0) {
+                return `We currently have these items on discount: ${discountedProducts
+                  .map((p) => `${p.name} (${p.discount}% off)`)
+                  .join(", ")}. Would you like to see more deals?`;
+              } else {
+                return "Check our special offers section for current discounts. Would you like me to direct you there?";
+              }
+            } else if (input.includes("spec") || input.includes("feature")) {
+              return "You can find detailed specifications on each product page. Is there a specific product you'd like to know more about?";
+            } else if (input.includes("cart") || input.includes("checkout")) {
+              return `You currently have ${vm.getCartCount()} items in your cart. Would you like to proceed to checkout?`;
+            } else {
+              return "I'm here to help with your tech shopping needs. You can ask me about product recommendations, specifications, or current offers. How can I assist you?";
+            }
+          };
+
+          // Get recommended products based on browsing history
+          const getRecommendedProducts = () => {
+            if (vm.browsingHistory.length === 0) return [];
+
+            // Get most viewed brand
+            const brandCounts = {};
+            vm.browsingHistory.forEach((item) => {
+              if (item.type === "brand") {
+                brandCounts[item.id] = (brandCounts[item.id] || 0) + 1;
+              }
+            });
+
+            // Get most viewed category
+            const categoryCounts = {};
+            vm.browsingHistory.forEach((item) => {
+              if (item.type === "product") {
+                const product = vm.products.find((p) => p.id === item.id);
+                if (product) {
+                  categoryCounts[product.category] =
+                    (categoryCounts[product.category] || 0) + 1;
+                }
+              }
+            });
+
+            // Find most common brand and category
+            let topBrand = null;
+            let maxBrandCount = 0;
+            for (const brandId in brandCounts) {
+              if (brandCounts[brandId] > maxBrandCount) {
+                maxBrandCount = brandCounts[brandId];
+                topBrand = brandId;
+              }
+            }
+
+            let topCategory = null;
+            let maxCategoryCount = 0;
+            for (const category in categoryCounts) {
+              if (categoryCounts[category] > maxCategoryCount) {
+                maxCategoryCount = categoryCounts[category];
+                topCategory = category;
+              }
+            }
+
+            // Filter products based on preferences
+            let recommended = [];
+            if (topBrand && topCategory) {
+              recommended = vm.products.filter(
+                (p) => p.brandId === topBrand && p.category === topCategory
+              );
+            } else if (topBrand) {
+              recommended = vm.products.filter((p) => p.brandId === topBrand);
+            } else if (topCategory) {
+              recommended = vm.products.filter(
+                (p) => p.category === topCategory
+              );
+            }
+
+            // Sort by rating and return top 5
+            return recommended.sort((a, b) => b.rating - a.rating).slice(0, 5);
+          };
+
+          // Get current page products
+          vm.getCurrentProducts = () => {
+            const indexOfLastProduct = vm.currentPage * vm.productsPerPage;
+            const indexOfFirstProduct = indexOfLastProduct - vm.productsPerPage;
+            return vm.filteredProducts.slice(
+              indexOfFirstProduct,
+              indexOfLastProduct
+            );
+          };
+
+          // Get total pages
+          vm.getTotalPages = () => {
+            return Math.ceil(vm.filteredProducts.length / vm.productsPerPage);
+          };
+
+          // Initialize
+          const init = () => {
+            applyTheme();
+
+            // Load cart from localStorage
+            const savedCart = localStorage.getItem("cart");
+            if (savedCart) {
+              vm.cart = JSON.parse(savedCart);
+            }
+
+            // Load browsing history from localStorage
+            const savedHistory = localStorage.getItem("browsingHistory");
+            if (savedHistory) {
+              vm.browsingHistory = JSON.parse(savedHistory);
+            }
+
+            // Set up auth state listener
+            auth.onAuthStateChanged((user) => {
+              vm.user = user;
+              $scope.$apply();
+
+              if (user) {
+                // Load user's cart from Firestore
+                db.collection("users")
+                  .doc(user.uid)
+                  .get()
+                  .then((doc) => {
+                    if (doc.exists) {
+                      const userData = doc.data();
+                      if (userData.cart) {
+                        vm.cart = userData.cart;
+                        $scope.$apply();
+                      }
+                      if (userData.browsingHistory) {
+                        vm.browsingHistory = userData.browsingHistory;
+                        $scope.$apply();
+                      }
+                    }
+                  });
+              }
+            });
+
+            // Apply initial filters
+            vm.applyFilters();
+
+            // Rotate featured products every 10 seconds
+            $interval(() => {
+              if (!vm.activeBrand) {
+                // Shuffle products for the "featured" view
+                vm.filteredProducts = [...vm.filteredProducts].sort(
+                  () => 0.5 - Math.random()
+                );
+                $scope.$apply();
+              }
+            }, 10000);
+
+            // Show random discount offers
+            $interval(() => {
+              const discountedProducts = vm.products.filter(
+                (p) => p.discount > 0
+              );
+              if (discountedProducts.length > 0) {
+                const randomProduct =
+                  discountedProducts[
+                    Math.floor(Math.random() * discountedProducts.length)
+                  ];
+                vm.showToast(
+                  `Special offer: ${randomProduct.name} - ${
+                    randomProduct.discount
+                  }% off! Now ${vm.formatPrice(randomProduct.price)}`,
+                  "success"
+                );
+              }
+            }, 30000);
+          };
+
+          // Watch for changes to save to localStorage
+          $scope.$watch(
+            () => vm.cart,
+            (newVal) => {
+              if (newVal) {
+                localStorage.setItem("cart", JSON.stringify(newVal));
+              }
+            },
+            true
+          );
+
+          $scope.$watch(
+            () => vm.browsingHistory,
+            (newVal) => {
+              if (newVal) {
+                localStorage.setItem("browsingHistory", JSON.stringify(newVal));
+              }
+            },
+            true
+          );
+
+          // Initialize the app
+          init();
+        });
+    </script>
+
+    <!-- HTML Template -->
+    <div ng-include="'main-template.html'"></div>
+
+    <!-- Main Template -->
+    <script type="text/ng-template" id="main-template.html">
+      <!-- Navigation -->
+      <nav>
+        <a href="index.html" class="logo">
+          <i class="fas fa-laptop-code"></i> TechWorld
+        </a>
+
+        <div class="nav-links" ng-class="{ 'active': mainCtrl.mobileMenuOpen }">
+          <a href="index.html">Home</a>
+          <a href="./products.html" class="active">Products</a>
+          <a href="./categories.html">Categories</a>
+          <a href="./build_pc.html">Build PC</a>
+          <a href="./about_us.html">About us</a>
+        </div>
+
+        <div class="nav-actions">
+          <a href="./cart.html" class="btn btn-outline" ng-if="mainCtrl.user">
+            <i class="fas fa-shopping-cart"></i> Cart ({{ mainCtrl.getCartCount() }})
+          </a>
+
+          <div class="avatar-dropdown" ng-if="mainCtrl.user">
+            <img
+              ng-src="{{ mainCtrl.user.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y' }}"
+              alt="{{ mainCtrl.user.displayName || 'User' }}"
+              class="user-avatar"
+            />
+            <div class="dropdown-content">
+              <a href="#">Profile</a>
+              <a href="./purchases.html">Orders</a>
+              <a href="#" ng-click="mainCtrl.handleLogout()">Logout</a>
+            </div>
+          </div>
+
+          <button
+            class="btn btn-outline"
+            ng-click="mainCtrl.showLoginModal = true"
+            ng-if="!mainCtrl.user"
+          >
+            Login
+          </button>
+          <button
+            class="btn btn-primary"
+            ng-click="mainCtrl.showRegisterModal = true"
+            ng-if="!mainCtrl.user"
+          >
+            Register
+          </button>
+
+          <button class="theme-toggle" ng-click="mainCtrl.toggleTheme()">
+            <i class="fas" ng-class="mainCtrl.theme === 'light' ? 'fa-sun' : 'fa-moon'"></i>
+          </button>
+          <div class="hamburger" ng-click="mainCtrl.toggleMobileMenu()">
+            <i class="fas fa-bars"></i>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Categories</h3>
+            <div class="filter-group">
+              <div class="filter-option" ng-repeat="category in mainCtrl.getUniqueCategories()">
+                <input
+                  type="checkbox"
+                  id="category-{{ category }}"
+                  ng-checked="mainCtrl.filters.categories.indexOf(category) > -1"
+                  ng-click="mainCtrl.handleFilterChange('categories', category)"
+                />
+                <label for="category-{{ category }}">{{ category }}</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Price Range</h3>
+            <div class="filter-group">
+              <input
+                type="range"
+                min="0"
+                max="500000"
+                step="10000"
+                ng-model="mainCtrl.filters.priceRange[1]"
+                ng-change="mainCtrl.applyFilters()"
+                class="price-range"
+              />
+              <div class="price-inputs">
+                <input
+                  type="number"
+                  ng-model="mainCtrl.filters.priceRange[0]"
+                  ng-change="mainCtrl.applyFilters()"
+                />
+                <input
+                  type="number"
+                  ng-model="mainCtrl.filters.priceRange[1]"
+                  ng-change="mainCtrl.applyFilters()"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Brands</h3>
+            <div class="filter-group">
+              <div class="filter-option" ng-repeat="brand in mainCtrl.brands">
+                <input
+                  type="checkbox"
+                  id="brand-{{ brand.id }}"
+                  ng-checked="mainCtrl.filters.brands.indexOf(brand.id) > -1"
+                  ng-click="mainCtrl.handleFilterChange('brands', brand.id)"
+                />
+                <label for="brand-{{ brand.id }}">{{ brand.name }}</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Rating</h3>
+            <div class="filter-group">
+              <div class="filter-option" ng-repeat="rating in [4,3,2,1]">
+                <input
+                  type="checkbox"
+                  id="rating-{{ rating }}"
+                  ng-checked="mainCtrl.filters.ratings.indexOf(rating) > -1"
+                  ng-click="mainCtrl.handleFilterChange('ratings', rating)"
+                />
+                <label for="rating-{{ rating }}">
+                  <span ng-repeat="i in [1,2,3,4,5]">
+                    <i class="fas" ng-class="i <= rating ? 'fa-star' : 'far fa-star'"></i>
+                  </span>
+                  & Up
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <button class="reset-filters" ng-click="mainCtrl.resetFilters()">
+            Reset All Filters
+          </button>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+          <div ng-if="mainCtrl.activeBrand">
+            <!-- Brand Products View -->
+            <div class="brands-header">
+              <h2 class="section-title">{{ mainCtrl.activeBrand.name }}</h2>
+              <div class="sort-options">
+                <span>Sort By:</span>
+                <select
+                  ng-model="mainCtrl.sortOption"
+                  ng-change="mainCtrl.applyFilters()"
+                >
+                  <option value="featured">Featured</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="rating">Rating</option>
+                  <option value="newest">Newest</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="search-bar">
+              <input
+                type="text"
+                placeholder="Search products..."
+                class="search-input"
+                ng-model="mainCtrl.searchQuery"
+                ng-change="mainCtrl.applyFilters()"
+              />
+              <button class="search-btn">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+
+            <div class="products-grid">
+              <div
+                class="product-card"
+                ng-repeat="product in mainCtrl.getCurrentProducts()"
+              >
+                <div class="discount-badge" ng-if="product.discount">
+                  {{ product.discount }}% OFF
+                </div>
+                <img
+                  ng-src="{{ product.image }}"
+                  alt="{{ product.name }}"
+                  class="product-image"
+                />
+                <div class="product-info">
+                  <h3 class="product-title">{{ product.name }}</h3>
+                  <div class="product-price">
+                    {{ mainCtrl.formatPrice(product.price) }}
+                    <span
+                      style="text-decoration: line-through; font-size: 0.9rem; color: var(--text-dark)"
+                      ng-if="product.originalPrice"
+                    >
+                      {{ mainCtrl.formatPrice(product.originalPrice) }}
+                    </span>
+                  </div>
+                  <div class="product-rating">
+                    <span ng-repeat="i in [1,2,3,4,5]">
+                      <i
+                        class="fas"
+                        ng-class="{
+                          'fa-star': i <= Math.floor(product.rating),
+                          'fa-star-half-alt': i > Math.floor(product.rating) && i-1 < product.rating,
+                          'far fa-star': i > product.rating
+                        }"
+                      ></i>
+                    </span>
+                    ({{ product.rating }})
+                  </div>
+                  <div class="product-actions">
+                    <button
+                      class="btn btn-primary btn-sm"
+                      ng-click="mainCtrl.addToCart(product)"
+                    >
+                      Add to Cart
+                    </button>
+                    <button class="wishlist-btn">
+                      <i class="far fa-heart"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div style="grid-column: 1 / -1; text-align: center" ng-if="mainCtrl.getCurrentProducts().length === 0">
+                <p>No products found matching your criteria.</p>
+                <button
+                  class="btn btn-outline"
+                  ng-click="mainCtrl.activeBrand = null; mainCtrl.resetFilters()"
+                >
+                  Browse All Brands
+                </button>
+              </div>
+            </div>
+
+            <div class="pagination" ng-if="mainCtrl.getTotalPages() > 1">
+              <button
+                ng-repeat="i in [] | range:mainCtrl.getTotalPages()"
+                class="page-btn"
+                ng-class="{ 'active': mainCtrl.currentPage === i+1 }"
+                ng-click="mainCtrl.currentPage = i+1"
+              >
+                {{ i+1 }}
+              </button>
+            </div>
+
+            <button
+              class="btn btn-outline"
+              ng-click="mainCtrl.activeBrand = null"
+              style="margin-top: 2rem"
+            >
+              Back to All Brands
+            </button>
+          </div>
+
+          <div ng-if="!mainCtrl.activeBrand">
+            <!-- All Brands View -->
+            <div class="brands-header">
+              <h2 class="section-title">Computer Brands</h2>
+              <div class="search-bar">
+                <input
+                  type="text"
+                  placeholder="Search brands..."
+                  class="search-input"
+                  ng-model="mainCtrl.searchQuery"
+                  ng-change="mainCtrl.applyFilters()"
+                />
+                <button class="search-btn">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="brands-grid">
+              <div
+                class="brand-card"
+                ng-repeat="brand in mainCtrl.brands | filter:mainCtrl.searchQuery"
+                ng-click="mainCtrl.handleBrandClick(brand)"
+              >
+                <img
+                  ng-src="{{ brand.logo }}"
+                  alt="{{ brand.name }}"
+                  class="brand-image"
+                />
+                <div class="brand-info">
+                  <h3 class="brand-name">{{ brand.name }}</h3>
+                  <p class="product-count">
+                    {{ (mainCtrl.products | filter:{ brandId: brand.id }).length }} products
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast Notifications -->
+      <div class="toast-container">
+        <div
+          class="toast toast-{{ toast.type }}"
+          ng-repeat="toast in mainCtrl.toasts"
+          ng-click="mainCtrl.removeToast(toast.id)"
+        >
+          {{ toast.message }}
+          <span class="toast-close">&times;</span>
+        </div>
+      </div>
+
+      <!-- AI Tool -->
+      <div class="ai-tool" ng-click="mainCtrl.toggleAIChat()">
+        <i class="fas fa-robot"></i>
+      </div>
+
+      <div class="ai-chat-container" ng-show="mainCtrl.showAIChat">
+        <div class="ai-chat-header">
+          <h3>TechWorld Assistant</h3>
+          <button class="btn btn-sm btn-outline" ng-click="mainCtrl.toggleAIChat()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="ai-chat-messages">
+          <div ng-repeat="message in mainCtrl.aiMessages">
+            <div ng-if="message.sender === 'user'" style="text-align: right; margin-bottom: 10px;">
+              <strong>You:</strong> {{ message.text }}
+            </div>
+            <div ng-if="message.sender === 'ai'" style="text-align: left; margin-bottom: 10px;">
+              <strong>Assistant:</strong> {{ message.text }}
+            </div>
+          </div>
+        </div>
+        <div class="ai-chat-input">
+          <input
+            type="text"
+            placeholder="Ask me about products..."
+            ng-model="mainCtrl.aiInput"
+            ng-keyup="$event.keyCode === 13 && mainCtrl.sendAIMessage()"
+          />
+          <button ng-click="mainCtrl.sendAIMessage()">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Login Modal -->
+      <div class="modal" ng-show="mainCtrl.showLoginModal">
+        <div class="modal-content">
+          <span class="close-modal" ng-click="mainCtrl.closeAllModals()">
+            &times;
+          </span>
+          <h2>Login to Your Account</h2>
+
+          <div class="social-login">
+            <button class="social-btn google-btn">
+              <i class="fab fa-google"></i> Continue with Google
+            </button>
+            <button class="social-btn facebook-btn">
+              <i class="fab fa-facebook-f"></i> Continue with Facebook
+            </button>
+          </div>
+
+          <div class="divider">
+            <span class="divider-text">OR</span>
+          </div>
+
+          <form ng-submit="mainCtrl.handleLogin(email, password)">
+            <div class="form-group">
+              <label for="loginEmail">Email</label>
+              <input
+                type="email"
+                id="loginEmail"
+                ng-model="email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <input
+                type="password"
+                id="loginPassword"
+                ng-model="password"
+                required
+              />
+            </div>
+            <button type="submit" class="form-submit">
+              Login
+            </button>
+            <p style="text-align: center; margin-top: 1rem">
+              Don't have an account?
+              <a
+                href="#"
+                ng-click="mainCtrl.showLoginModal = false; mainCtrl.showRegisterModal = true"
+              >
+                Register
+              </a>
+            </p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Register Modal -->
+      <div class="modal" ng-show="mainCtrl.showRegisterModal">
+        <div class="modal-content">
+          <span class="close-modal" ng-click="mainCtrl.closeAllModals()">
+            &times;
+          </span>
+          <h2>Create an Account</h2>
+
+          <div class="social-login">
+            <button class="social-btn google-btn">
+              <i class="fab fa-google"></i> Continue with Google
+            </button>
+            <button class="social-btn facebook-btn">
+              <i class="fab fa-facebook-f"></i> Continue with Facebook
+            </button>
+          </div>
+
+          <div class="divider">
+            <span class="divider-text">OR</span>
+          </div>
+
+          <form ng-submit="mainCtrl.handleRegister(name, email, password)">
+            <div class="form-group">
+              <label for="registerName">Full Name</label>
+              <input
+                type="text"
+                id="registerName"
+                ng-model="name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="registerEmail">Email</label>
+              <input
+                type="email"
+                id="registerEmail"
+                ng-model="email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="registerPassword">Password</label>
+              <input
+                type="password"
+                id="registerPassword"
+                ng-model="password"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="registerConfirm">Confirm Password</label>
+              <input
+                type="password"
+                id="registerConfirm"
+                ng-model="confirmPassword"
+                required
+              />
+            </div>
+            <button type="submit" class="form-submit">
+              Register
+            </button>
+            <p style="text-align: center; margin-top: 1rem">
+              Already have an account?
+              <a
+                href="#"
+                ng-click="mainCtrl.showRegisterModal = false; mainCtrl.showLoginModal = true"
+              >
+                Login
+              </a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </script>
+
+    <!-- Range Filter for AngularJS -->
+    <script>
+      angular.module("techWorldApp").filter("range", function () {
+        return function (input, total) {
+          total = parseInt(total);
+          for (var i = 0; i < total; i++) {
+            input.push(i);
+          }
+          return input;
+        };
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout - TechWorld</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-dark: #0a192f;
+        --primary-light: #64ffda;
+        --secondary-dark: #172a45;
+        --secondary-light: #ccd6f6;
+        --text-light: #e6f1ff;
+        --text-dark: #8892b0;
+        --accent: #1e90ff;
+        --card-bg: rgba(23, 42, 69, 0.7);
+        --error: #ff6b6b;
+        --success: #64ffda;
+      }
+
+      [data-theme="light"] {
+        --primary-dark: #f8f9fa;
+        --primary-light: #1e90ff;
+        --secondary-dark: #e9ecef;
+        --secondary-light: #495057;
+        --text-light: #212529;
+        --text-dark: #6c757d;
+        --accent: #1a73e8;
+        --card-bg: rgba(233, 236, 239, 0.8);
+        --error: #dc3545;
+        --success: #28a745;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      body {
+        color: var(--text-light);
+        background-color: var(--primary-dark);
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Navigation */
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 5%;
+        background-color: rgba(10, 25, 47, 0.9);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+
+      .logo i {
+        margin-right: 0.5rem;
+        color: var(--accent);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 500;
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--primary-light);
+        transition: width 0.3s;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 5px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--primary-light);
+        color: var(--primary-light);
+      }
+
+      .btn-primary:hover,
+      .btn-outline:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .theme-toggle {
+        background: none;
+        border: none;
+        color: var(--text-light);
+        font-size: 1.2rem;
+        cursor: pointer;
+        margin-left: 1rem;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid var(--primary-light);
+      }
+
+      .avatar-dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: var(--secondary-dark);
+        min-width: 160px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .dropdown-content a {
+        color: var(--text-light);
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .avatar-dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .hamburger {
+        display: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+
+      /* Checkout Container */
+      .checkout-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        padding: 3rem 5%;
+      }
+
+      .checkout-section {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--primary-light);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 5px;
+        border: 1px solid var(--text-dark);
+        background-color: transparent;
+        color: var(--text-light);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      /* Order Summary */
+      .order-summary {
+        position: sticky;
+        top: 100px;
+      }
+
+      .order-items {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-bottom: 1.5rem;
+      }
+
+      .order-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--text-dark);
+      }
+
+      .order-item-name {
+        flex: 1;
+      }
+
+      .order-item-price {
+        font-weight: 600;
+      }
+
+      .order-totals {
+        margin-top: 1.5rem;
+      }
+
+      .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+
+      .grand-total {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--text-dark);
+      }
+
+      /* Payment Methods */
+      .payment-methods {
+        margin-top: 2rem;
+      }
+
+      .payment-method {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border: 1px solid var(--text-dark);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .payment-method:hover {
+        border-color: var(--primary-light);
+      }
+
+      .payment-method.active {
+        border-color: var(--primary-light);
+        background-color: rgba(100, 255, 218, 0.1);
+      }
+
+      .payment-method-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1.5rem;
+      }
+
+      .payment-method-info {
+        flex: 1;
+      }
+
+      .payment-method-info h4 {
+        margin-bottom: 0.2rem;
+      }
+
+      .payment-method-info p {
+        color: var(--text-dark);
+        font-size: 0.9rem;
+      }
+
+      /* QR Code */
+      .qr-code-container {
+        text-align: center;
+        margin: 1rem 0;
+        display: none;
+      }
+
+      .qr-code {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 5px;
+      }
+
+      .qr-code-instructions {
+        margin-top: 1rem;
+        color: var(--text-dark);
+      }
+
+      /* Card Details */
+      .card-details {
+        display: none;
+      }
+
+      .card-icons {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .card-icon {
+        width: 40px;
+        height: 25px;
+        object-fit: contain;
+      }
+
+      /* UPI Details */
+      .upi-details {
+        display: none;
+      }
+
+      .upi-apps {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .upi-app {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        cursor: pointer;
+      }
+
+      /* Place Order Button */
+      .place-order-btn {
+        width: 100%;
+        padding: 1rem;
+        margin-top: 1.5rem;
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .place-order-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Toast Notification */
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1100;
+      }
+
+      .toast {
+        padding: 1rem 1.5rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .toast-success {
+        background-color: var(--success);
+        color: var(--primary-dark);
+      }
+
+      .toast-error {
+        background-color: var(--error);
+        color: white;
+      }
+
+      .toast-close {
+        margin-left: 1rem;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+
+      /* Mobile Styles */
+      @media (max-width: 992px) {
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background-color: var(--secondary-dark);
+          flex-direction: column;
+          padding: 1rem 5%;
+          gap: 1rem;
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .hamburger {
+          display: block;
+        }
+
+        .checkout-container {
+          grid-template-columns: 1fr;
+        }
+
+        .order-summary {
+          position: static;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .payment-method {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .payment-method-icon {
+          margin-right: 0;
+          margin-bottom: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Navigation -->
+    <nav>
+      <a href="index.html" class="logo">
+        <i class="fas fa-laptop-code"></i> TechWorld
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="#categories">Categories</a>
+        <a href="#deals">Deals</a>
+        <a href="#support">Support</a>
+      </div>
+
+      <div class="nav-actions" id="navActions">
+        <div class="avatar-dropdown">
+          <img
+            src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+            alt="User"
+            class="user-avatar"
+          />
+          <div class="dropdown-content">
+            <a href="#" id="profileBtn">Profile</a>
+            <a href="purchases.html" id="purchasesBtn">My Purchases</a>
+            <a href="#" id="logoutBtn">Logout</a>
+          </div>
+        </div>
+        <button class="theme-toggle" id="themeToggle">
+          <i class="fas fa-moon"></i>
+        </button>
+        <div class="hamburger" id="hamburger">
+          <i class="fas fa-bars"></i>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Checkout Container -->
+    <div class="checkout-container">
+      <!-- Shipping and Billing -->
+      <div class="checkout-section">
+        <h2 class="section-title">Shipping Information</h2>
+        <form id="shippingForm">
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" required />
+          </div>
+          <div class="form-group">
+            <label for="address">Street Address</label>
+            <input type="text" id="address" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" required />
+            </div>
+            <div class="form-group">
+              <label for="state">State</label>
+              <input type="text" id="state" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="zip">ZIP Code</label>
+              <input type="text" id="zip" required />
+            </div>
+            <div class="form-group">
+              <label for="country">Country</label>
+              <select id="country" required>
+                <option value="India">India</option>
+                <option value="USA">United States</option>
+                <option value="UK">United Kingdom</option>
+                <option value="Canada">Canada</option>
+                <option value="Australia">Australia</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="shippingMethod">Shipping Method</label>
+            <select id="shippingMethod" required>
+              <option value="standard">Standard Shipping (5-7 days)</option>
+              <option value="express">Express Shipping (2-3 days)</option>
+              <option value="priority">Priority Shipping (1-2 days)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input type="checkbox" id="sameAsShipping" checked />
+            <label for="sameAsShipping">Billing address same as shipping</label>
+          </div>
+        </form>
+
+        <div id="billingForm" style="display: none">
+          <h2 class="section-title">Billing Information</h2>
+          <form>
+            <div class="form-group">
+              <label for="billingName">Full Name</label>
+              <input type="text" id="billingName" required />
+            </div>
+            <div class="form-group">
+              <label for="billingAddress">Street Address</label>
+              <input type="text" id="billingAddress" required />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="billingCity">City</label>
+                <input type="text" id="billingCity" required />
+              </div>
+              <div class="form-group">
+                <label for="billingState">State</label>
+                <input type="text" id="billingState" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="billingZip">ZIP Code</label>
+                <input type="text" id="billingZip" required />
+              </div>
+              <div class="form-group">
+                <label for="billingCountry">Country</label>
+                <select id="billingCountry" required>
+                  <option value="India">India</option>
+                  <option value="USA">United States</option>
+                  <option value="UK">United Kingdom</option>
+                  <option value="Canada">Canada</option>
+                  <option value="Australia">Australia</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="checkout-section order-summary">
+        <h2 class="section-title">Order Summary</h2>
+        <div class="order-items" id="orderItems">
+          <!-- Order items will be loaded here -->
+        </div>
+        <div class="order-totals">
+          <div class="total-row">
+            <span>Subtotal:</span>
+            <span id="orderSubtotal">₹0.00</span>
+          </div>
+          <div class="total-row">
+            <span>Shipping:</span>
+            <span id="orderShipping">₹0.00</span>
+          </div>
+          <div class="total-row">
+            <span>Tax:</span>
+            <span id="orderTax">₹0.00</span>
+          </div>
+          <div class="total-row grand-total">
+            <span>Total:</span>
+            <span id="orderTotal">₹0.00</span>
+          </div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="payment-methods">
+          <h2 class="section-title">Payment Method</h2>
+          <div class="payment-method active" id="cardPayment">
+            <div class="payment-method-icon">
+              <i class="far fa-credit-card"></i>
+            </div>
+            <div class="payment-method-info">
+              <h4>Credit/Debit Card</h4>
+              <p>Pay with Visa, Mastercard, or other cards</p>
+            </div>
+          </div>
+
+          <div class="payment-method" id="upiPayment">
+            <div class="payment-method-icon">
+              <i class="fas fa-mobile-alt"></i>
+            </div>
+            <div class="payment-method-info">
+              <h4>UPI Payment</h4>
+              <p>Pay using any UPI app like Google Pay, PhonePe</p>
+            </div>
+          </div>
+
+          <div class="payment-method" id="qrPayment">
+            <div class="payment-method-icon">
+              <i class="fas fa-qrcode"></i>
+            </div>
+            <div class="payment-method-info">
+              <h4>Scan QR Code</h4>
+              <p>Scan and pay using any UPI app</p>
+            </div>
+          </div>
+
+          <!-- Card Payment Details -->
+          <div class="card-details" id="cardDetails">
+            <div class="card-icons">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/196/196578.png"
+                alt="Visa"
+                class="card-icon"
+              />
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/196/196561.png"
+                alt="Mastercard"
+                class="card-icon"
+              />
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/196/196566.png"
+                alt="American Express"
+                class="card-icon"
+              />
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/196/196560.png"
+                alt="Discover"
+                class="card-icon"
+              />
+            </div>
+            <div class="form-group">
+              <label for="cardNumber">Card Number</label>
+              <input
+                type="text"
+                id="cardNumber"
+                placeholder="1234 5678 9012 3456"
+                required
+              />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="expiryDate">Expiry Date</label>
+                <input
+                  type="text"
+                  id="expiryDate"
+                  placeholder="MM/YY"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="text" id="cvv" placeholder="123" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="cardName">Name on Card</label>
+              <input
+                type="text"
+                id="cardName"
+                placeholder="John Doe"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- UPI Payment Details -->
+          <div class="upi-details" id="upiDetails">
+            <div class="upi-apps">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/825/825454.png"
+                alt="Google Pay"
+                class="upi-app"
+              />
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/825/825461.png"
+                alt="PhonePe"
+                class="upi-app"
+              />
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/825/825462.png"
+                alt="Paytm"
+                class="upi-app"
+              />
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/825/825463.png"
+                alt="BHIM"
+                class="upi-app"
+              />
+            </div>
+            <div class="form-group">
+              <label for="upiId">UPI ID</label>
+              <input
+                type="text"
+                id="upiId"
+                placeholder="yourname@upi"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- QR Code Payment -->
+          <div class="qr-code-container" id="qrCodeContainer">
+            <div class="qr-code">
+              <!-- QR code would be generated here in a real app -->
+              <img
+                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=TechWorldOrder12345"
+                alt="QR Code"
+              />
+            </div>
+            <p class="qr-code-instructions">
+              Scan this QR code with any UPI app to complete your payment
+            </p>
+          </div>
+
+          <button class="place-order-btn" id="placeOrderBtn">
+            Place Order
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDxlEFhfp8yQw2F8R5enY0F2Dw5dtlSqjU",
+        authDomain: "techworld-497d8.firebaseapp.com",
+        projectId: "techworld-497d8",
+        storageBucket: "techworld-497d8.firebasestorage.app",
+        messagingSenderId: "1086581951112",
+        appId: "1:1086581951112:web:60bf842c4b2fa5d9936d3d",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+
+      // Cart data
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // DOM Elements
+      const navActions = document.getElementById("navActions");
+      const navLinks = document.getElementById("navLinks");
+      const hamburger = document.getElementById("hamburger");
+      const themeToggle = document.getElementById("themeToggle");
+      const body = document.body;
+      const toastContainer = document.getElementById("toastContainer");
+      const orderItems = document.getElementById("orderItems");
+      const sameAsShipping = document.getElementById("sameAsShipping");
+      const billingForm = document.getElementById("billingForm");
+
+      // Payment method elements
+      const cardPayment = document.getElementById("cardPayment");
+      const upiPayment = document.getElementById("upiPayment");
+      const qrPayment = document.getElementById("qrPayment");
+      const cardDetails = document.getElementById("cardDetails");
+      const upiDetails = document.getElementById("upiDetails");
+      const qrCodeContainer = document.getElementById("qrCodeContainer");
+      const placeOrderBtn = document.getElementById("placeOrderBtn");
+
+      // Initialize the app
+      document.addEventListener("DOMContentLoaded", () => {
+        initThemeToggle();
+        initMobileMenu();
+        renderOrderSummary();
+        setupAuthStateListener();
+        setupEventListeners();
+      });
+
+      // Format price in Indian Rupees
+      function formatPrice(price) {
+        return new Intl.NumberFormat("en-IN", {
+          style: "currency",
+          currency: "INR",
+          maximumFractionDigits: 0,
+        }).format(price);
+      }
+
+      // Render order summary
+      function renderOrderSummary() {
+        if (cart.length === 0) {
+          orderItems.innerHTML = "<p>Your cart is empty</p>";
+          return;
+        }
+
+        orderItems.innerHTML = cart
+          .map(
+            (item) => `
+            <div class="order-item">
+              <div class="order-item-name">${item.title} × ${
+              item.quantity
+            }</div>
+              <div class="order-item-price">${formatPrice(
+                item.price * item.quantity
+              )}</div>
+            </div>
+          `
+          )
+          .join("");
+
+        // Calculate totals
+        const subtotal = cart.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+        const shipping = subtotal > 50000 ? 0 : 5000; // Free shipping over ₹50,000
+        const tax = subtotal * 0.18; // 18% tax
+        const total = subtotal + shipping + tax;
+
+        document.getElementById("orderSubtotal").textContent =
+          formatPrice(subtotal);
+        document.getElementById("orderShipping").textContent =
+          formatPrice(shipping);
+        document.getElementById("orderTax").textContent = formatPrice(tax);
+        document.getElementById("orderTotal").textContent = formatPrice(total);
+      }
+
+      // Show toast notification
+      function showToast(message, type = "success") {
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+          ${message}
+          <span class="toast-close">&times;</span>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+
+        // Manual close
+        toast.querySelector(".toast-close").addEventListener("click", () => {
+          toast.remove();
+        });
+      }
+
+      // Theme Toggle
+      function initThemeToggle() {
+        if (!themeToggle || !body) return;
+
+        themeToggle.addEventListener("click", () => {
+          const currentTheme = body.getAttribute("data-theme");
+
+          if (currentTheme === "light") {
+            body.removeAttribute("data-theme");
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            localStorage.setItem("theme", "dark");
+          } else {
+            body.setAttribute("data-theme", "light");
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            localStorage.setItem("theme", "light");
+          }
+        });
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "light") {
+          body.setAttribute("data-theme", "light");
+          themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+      }
+
+      // Mobile Menu
+      function initMobileMenu() {
+        if (!hamburger || !navLinks) return;
+
+        hamburger.addEventListener("click", () => {
+          navLinks.classList.toggle("active");
+        });
+      }
+
+      // Setup authentication state listener
+      function setupAuthStateListener() {
+        auth.onAuthStateChanged((user) => {
+          if (!user) {
+            // Redirect to login if not authenticated
+            window.location.href = "login.html?redirect=checkout";
+          }
+        });
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        // Same as shipping checkbox
+        sameAsShipping.addEventListener("change", (e) => {
+          billingForm.style.display = e.target.checked ? "none" : "block";
+        });
+
+        // Payment method selection
+        cardPayment.addEventListener("click", () => {
+          cardPayment.classList.add("active");
+          upiPayment.classList.remove("active");
+          qrPayment.classList.remove("active");
+          cardDetails.style.display = "block";
+          upiDetails.style.display = "none";
+          qrCodeContainer.style.display = "none";
+        });
+
+        upiPayment.addEventListener("click", () => {
+          cardPayment.classList.remove("active");
+          upiPayment.classList.add("active");
+          qrPayment.classList.remove("active");
+          cardDetails.style.display = "none";
+          upiDetails.style.display = "block";
+          qrCodeContainer.style.display = "none";
+        });
+
+        qrPayment.addEventListener("click", () => {
+          cardPayment.classList.remove("active");
+          upiPayment.classList.remove("active");
+          qrPayment.classList.add("active");
+          cardDetails.style.display = "none";
+          upiDetails.style.display = "none";
+          qrCodeContainer.style.display = "block";
+        });
+
+        // Place order button
+        placeOrderBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // Validate shipping form
+          const shippingForm = document.getElementById("shippingForm");
+          if (!shippingForm.checkValidity()) {
+            shippingForm.reportValidity();
+            return;
+          }
+
+          // Validate payment method
+          if (cardPayment.classList.contains("active")) {
+            const cardForm = document.querySelector("#cardDetails");
+            if (!cardForm.checkValidity()) {
+              cardForm.reportValidity();
+              return;
+            }
+          } else if (upiPayment.classList.contains("active")) {
+            const upiForm = document.querySelector("#upiDetails");
+            if (!upiForm.checkValidity()) {
+              upiForm.reportValidity();
+              return;
+            }
+          }
+
+          // In a real app, you would process the payment here
+          // For this demo, we'll just show a success message
+
+          // Create order object
+          const order = {
+            id: "ORD-" + Math.random().toString(36).substr(2, 8).toUpperCase(),
+            date: new Date().toISOString(),
+            items: [...cart],
+            shipping: {
+              name: document.getElementById("fullName").value,
+              address: document.getElementById("address").value,
+              city: document.getElementById("city").value,
+              state: document.getElementById("state").value,
+              zip: document.getElementById("zip").value,
+              country: document.getElementById("country").value,
+              method: document.getElementById("shippingMethod").value,
+            },
+            payment: {
+              method: cardPayment.classList.contains("active")
+                ? "card"
+                : upiPayment.classList.contains("active")
+                ? "upi"
+                : "qr",
+              amount: document.getElementById("orderTotal").textContent,
+            },
+            status: "processing",
+          };
+
+          // Save order to localStorage
+          let orders = JSON.parse(localStorage.getItem("orders")) || [];
+          orders.push(order);
+          localStorage.setItem("orders", JSON.stringify(orders));
+
+          // Clear cart
+          localStorage.removeItem("cart");
+          cart = [];
+
+          // Redirect to thank you page
+          window.location.href = "thankyou.html?id=" + order.id;
+        });
+
+        // Logout button
+        document.getElementById("logoutBtn")?.addEventListener("click", (e) => {
+          e.preventDefault();
+          auth
+            .signOut()
+            .then(() => {
+              window.location.href = "index.html";
+            })
+            .catch((error) => {
+              showToast("Error signing out: " + error.message, "error");
+            });
+        });
+      }
+    </script>
+  </body>
+</html>

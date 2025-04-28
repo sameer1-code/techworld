@@ -1,0 +1,3312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PC Builder | TechWorld</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <style>
+      :root {
+        --primary-dark: #0a192f;
+        --primary-light: #64ffda;
+        --secondary-dark: #172a45;
+        --secondary-light: #ccd6f6;
+        --text-light: #e6f1ff;
+        --text-dark: #8892b0;
+        --accent: #1e90ff;
+        --card-bg: rgba(23, 42, 69, 0.7);
+        --error: #ff6b6b;
+        --success: #64ffda;
+      }
+
+      [data-theme="light"] {
+        --primary-dark: #f8f9fa;
+        --primary-light: #1e90ff;
+        --secondary-dark: #e9ecef;
+        --secondary-light: #495057;
+        --text-light: #212529;
+        --text-dark: #6c757d;
+        --accent: #1a73e8;
+        --card-bg: rgba(233, 236, 239, 0.8);
+        --error: #dc3545;
+        --success: #28a745;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      body {
+        color: var(--text-light);
+        background-color: var(--primary-dark);
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Starfield Background */
+      #starfield {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: linear-gradient(to bottom, #000428, #004e92);
+      }
+
+      .star {
+        position: absolute;
+        background-color: #fff;
+        border-radius: 50%;
+        animation: fall linear infinite;
+      }
+
+      @keyframes fall {
+        to {
+          transform: translateY(100vh);
+        }
+      }
+
+      /* Navigation */
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 5%;
+        background-color: rgba(10, 25, 47, 0.9);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+
+      .logo i {
+        margin-right: 0.5rem;
+        color: var(--accent);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 500;
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--primary-light);
+        transition: width 0.3s;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 5px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--primary-light);
+        color: var(--primary-light);
+      }
+
+      .btn-primary:hover,
+      .btn-outline:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .theme-toggle {
+        background: none;
+        border: none;
+        color: var(--text-light);
+        font-size: 1.2rem;
+        cursor: pointer;
+        margin-left: 1rem;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid var(--primary-light);
+      }
+
+      .avatar-dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: var(--secondary-dark);
+        min-width: 160px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .dropdown-content a {
+        color: var(--text-light);
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .avatar-dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .hamburger {
+        display: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+
+      /* Hero Banner */
+      .builder-hero {
+        height: 300px;
+        background: linear-gradient(
+            rgba(10, 25, 47, 0.8),
+            rgba(10, 25, 47, 0.8)
+          ),
+          url("https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .builder-hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(
+          to right,
+          var(--primary-light),
+          var(--accent)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .builder-hero p {
+        font-size: 1.2rem;
+        max-width: 800px;
+        margin-bottom: 2rem;
+      }
+
+      /* Builder Container */
+      .builder-container {
+        display: flex;
+        padding: 0 5%;
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      /* Builder Sidebar */
+      .builder-sidebar {
+        width: 300px;
+        background-color: var(--secondary-dark);
+        border-radius: 10px;
+        padding: 1.5rem;
+        position: sticky;
+        top: 100px;
+        height: fit-content;
+      }
+
+      .builder-sidebar h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--primary-light);
+        border-bottom: 1px solid var(--text-dark);
+        padding-bottom: 0.5rem;
+      }
+
+      .build-summary {
+        margin-bottom: 2rem;
+      }
+
+      .build-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(136, 146, 176, 0.2);
+      }
+
+      .build-item img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+
+      .build-item-info {
+        flex: 1;
+      }
+
+      .build-item-info h4 {
+        font-size: 0.9rem;
+        margin-bottom: 0.2rem;
+      }
+
+      .build-item-info p {
+        font-size: 0.8rem;
+        color: var(--text-dark);
+      }
+
+      .remove-item {
+        background: none;
+        border: none;
+        color: var(--error);
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .build-total {
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--text-dark);
+      }
+
+      .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+
+      .grand-total {
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--text-dark);
+      }
+
+      .save-build-btn {
+        width: 100%;
+        margin-top: 1.5rem;
+      }
+
+      /* Builder Main */
+      .builder-main {
+        flex: 1;
+      }
+
+      /* Builder Filters */
+      .builder-filters {
+        background-color: var(--secondary-dark);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .filter-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .filter-header h2 {
+        font-size: 1.5rem;
+        color: var(--primary-light);
+      }
+
+      .search-bar {
+        display: flex;
+        align-items: center;
+        background-color: var(--primary-dark);
+        border-radius: 5px;
+        padding: 0.5rem;
+        width: 300px;
+      }
+
+      .search-bar input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: var(--text-light);
+        padding: 0.5rem;
+        outline: none;
+      }
+
+      .search-bar i {
+        color: var(--text-dark);
+        margin-right: 0.5rem;
+      }
+
+      .filter-tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid var(--text-dark);
+        padding-bottom: 1rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .filter-tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .filter-tab {
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        border-radius: 5px;
+        white-space: nowrap;
+      }
+
+      .filter-tab.active {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      .filter-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .filter-group {
+        margin-bottom: 1rem;
+      }
+
+      .filter-group h4 {
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--primary-light);
+      }
+
+      .filter-checkbox {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .filter-checkbox input {
+        margin-right: 0.5rem;
+      }
+
+      .filter-checkbox label {
+        font-size: 0.9rem;
+      }
+
+      /* Builder Products */
+      .builder-products {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .product-card {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .product-info {
+        padding: 1.5rem;
+      }
+
+      .product-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .product-price {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        margin-bottom: 1rem;
+      }
+
+      .product-specs {
+        margin-bottom: 1rem;
+      }
+
+      .spec-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.3rem;
+        font-size: 0.9rem;
+      }
+
+      .spec-label {
+        color: var(--text-dark);
+      }
+
+      .product-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      /* AI Builder Section */
+      .ai-builder {
+        background-color: var(--secondary-dark);
+        border-radius: 10px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .ai-builder h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--primary-light);
+      }
+
+      .ai-builder p {
+        margin-bottom: 1.5rem;
+      }
+
+      .ai-input {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .ai-input input {
+        flex: 1;
+        padding: 0.8rem;
+        border-radius: 5px;
+        border: 1px solid var(--text-dark);
+        background-color: transparent;
+        color: var(--text-light);
+      }
+
+      .ai-input button {
+        padding: 0 1.5rem;
+      }
+
+      .ai-response {
+        background-color: var(--primary-dark);
+        border-radius: 5px;
+        padding: 1rem;
+        margin-top: 1rem;
+        display: none;
+      }
+
+      .ai-response h3 {
+        margin-bottom: 0.5rem;
+        color: var(--primary-light);
+      }
+
+      .ai-response p {
+        margin-bottom: 1rem;
+      }
+
+      /* Prebuilt Section */
+      .prebuilt-section {
+        margin-bottom: 3rem;
+      }
+
+      .prebuilt-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        color: var(--primary-light);
+      }
+
+      .prebuilt-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+      }
+
+      .prebuilt-card {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s;
+      }
+
+      .prebuilt-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .prebuilt-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .prebuilt-info {
+        padding: 1.5rem;
+      }
+
+      .prebuilt-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .prebuilt-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        margin-bottom: 1rem;
+      }
+
+      .prebuilt-specs {
+        margin-bottom: 1.5rem;
+      }
+
+      .prebuilt-spec {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      .prebuilt-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      /* Floating Gaming Laptop */
+      .floating-laptop {
+        position: fixed;
+        top: 150px;
+        right: 20px;
+        width: 180px;
+        z-index: 99;
+        animation: float 6s ease-in-out infinite;
+        opacity: 0.9;
+        filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.7));
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) translateX(0);
+        }
+        50% {
+          transform: translateY(-20px) translateX(-10px);
+        }
+      }
+
+      /* RGB Animation for Floating Laptop */
+      @keyframes rgb-glow {
+        0% {
+          filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.7));
+        }
+        33% {
+          filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.7));
+        }
+        66% {
+          filter: drop-shadow(0 0 10px rgba(0, 0, 255, 0.7));
+        }
+        100% {
+          filter: drop-shadow(0 0 10px rgba(255, 0, 255, 0.7));
+        }
+      }
+
+      .floating-laptop {
+        animation: float 6s ease-in-out infinite, rgb-glow 5s linear infinite;
+      }
+
+      /* Toast Notification */
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1100;
+      }
+
+      .toast {
+        padding: 1rem 1.5rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .toast-success {
+        background-color: var(--success);
+        color: var(--primary-dark);
+      }
+
+      .toast-error {
+        background-color: var(--error);
+        color: white;
+      }
+
+      .toast-close {
+        margin-left: 1rem;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+
+      /* Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background-color: var(--secondary-dark);
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .modal h2 {
+        margin-bottom: 1.5rem;
+        color: var(--primary-light);
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 5px;
+        border: 1px solid var(--text-dark);
+        background-color: transparent;
+        color: var(--text-light);
+      }
+
+      .form-submit {
+        width: 100%;
+        padding: 0.8rem;
+        margin-top: 1rem;
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      /* Login Modal */
+      .login-modal-content {
+        max-width: 400px;
+      }
+
+      .social-login {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin: 1rem 0;
+      }
+
+      .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s;
+      }
+
+      .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .google-btn {
+        background-color: #fff;
+        color: #757575;
+      }
+
+      .facebook-btn {
+        background-color: #3b5998;
+        color: white;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        margin: 1rem 0;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid var(--text-dark);
+      }
+
+      .divider-text {
+        padding: 0 1rem;
+        color: var(--text-dark);
+      }
+
+      /* Empty State */
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+      }
+
+      .empty-state p {
+        color: var(--text-dark);
+      }
+
+      /* Quick View Modal */
+      .quickview-modal-content {
+        max-width: 800px;
+        width: 90%;
+      }
+
+      .quickview-content {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .quickview-image {
+        flex: 1;
+        max-height: 400px;
+        object-fit: contain;
+        border-radius: 5px;
+      }
+
+      .quickview-details {
+        flex: 1;
+      }
+
+      .quickview-title {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        color: var(--primary-light);
+      }
+
+      .quickview-price {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        margin-bottom: 1.5rem;
+      }
+
+      .quickview-specs {
+        margin-bottom: 2rem;
+      }
+
+      .quickview-spec {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.8rem;
+        font-size: 1rem;
+      }
+
+      .quickview-spec-label {
+        font-weight: 600;
+        color: var(--primary-light);
+      }
+
+      .quickview-description {
+        margin-bottom: 2rem;
+        line-height: 1.6;
+      }
+
+      .quickview-actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      /* Mobile Styles */
+      @media (max-width: 992px) {
+        .builder-container {
+          flex-direction: column;
+        }
+
+        .builder-sidebar {
+          width: 100%;
+          position: static;
+          margin-bottom: 2rem;
+        }
+
+        .search-bar {
+          width: 100%;
+        }
+
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background-color: var(--secondary-dark);
+          flex-direction: column;
+          padding: 1rem 5%;
+          gap: 1rem;
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .hamburger {
+          display: block;
+        }
+
+        .builder-hero h1 {
+          font-size: 2rem;
+        }
+
+        .floating-laptop {
+          display: none;
+        }
+
+        .quickview-content {
+          flex-direction: column;
+        }
+
+        .quickview-image {
+          max-height: 300px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .filter-options {
+          grid-template-columns: 1fr;
+        }
+
+        .prebuilt-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .builder-products {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Animations */
+      .animate-pop {
+        animation: popIn 0.5s ease-out;
+      }
+
+      @keyframes popIn {
+        0% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .animate-fade {
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      /* Loading Spinner */
+      .spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: var(--primary-light);
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Starfield Background -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Floating Gaming Laptop -->
+    <img
+      src="https://images.unsplash.com/photo-1593642634524-b40b5baae6bb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+      alt="Gaming Laptop"
+      class="floating-laptop"
+    />
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Navigation -->
+    <nav>
+      <a href="index.html" class="logo">
+        <i class="fas fa-laptop-code"></i> TechWorld
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="./index.html">Home</a>
+        <a href="./products.html">Products</a>
+        <a href="./category.html">Categories</a>
+        <a href="build_pc.html" class="active">Build PC</a>
+        <a href="#prebuilt">Prebuilt PCs</a>
+      </div>
+
+      <div class="nav-actions" id="navActions">
+        <button class="btn btn-outline" id="loginBtn">Login</button>
+        <button class="btn btn-primary" id="registerBtn">Register</button>
+        <button class="theme-toggle" id="themeToggle">
+          <i class="fas fa-moon"></i>
+        </button>
+        <div class="hamburger" id="hamburger">
+          <i class="fas fa-bars"></i>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <section class="builder-hero">
+      <h1 class="animate__animated animate__fadeInDown">Custom PC Builder</h1>
+      <p class="animate__animated animate__fadeInUp">
+        Build your dream PC with our extensive selection of high-quality
+        components. Perfect for gaming, workstations, or everyday computing.
+      </p>
+      <button
+        class="btn btn-primary animate__animated animate__fadeIn"
+        id="aiBuilderBtn"
+      >
+        <i class="fas fa-robot"></i> AI-Powered PC Builder
+      </button>
+    </section>
+
+    <!-- Builder Container -->
+    <div class="builder-container">
+      <!-- Builder Sidebar -->
+      <aside class="builder-sidebar">
+        <h2>Your Build</h2>
+        <div class="build-summary" id="buildSummary">
+          <!-- Components will be added here -->
+          <div class="empty-state">
+            <i class="fas fa-tools"></i>
+            <p>Your build is empty</p>
+            <p>Start by adding components</p>
+          </div>
+        </div>
+        <div class="build-total" id="buildTotal" style="display: none">
+          <div class="total-row">
+            <span>Subtotal:</span>
+            <span id="buildSubtotal">₹0</span>
+          </div>
+          <div class="total-row">
+            <span>Shipping:</span>
+            <span id="buildShipping">₹0</span>
+          </div>
+          <div class="total-row">
+            <span>Tax:</span>
+            <span id="buildTax">₹0</span>
+          </div>
+          <div class="total-row grand-total">
+            <span>Total:</span>
+            <span id="buildGrandTotal">₹0</span>
+          </div>
+        </div>
+        <button
+          class="btn btn-primary save-build-btn"
+          id="saveBuildBtn"
+          style="display: none"
+        >
+          Save Build
+        </button>
+        <button
+          class="btn btn-outline save-build-btn"
+          id="checkoutBtn"
+          style="display: none"
+        >
+          Proceed to Checkout
+        </button>
+      </aside>
+
+      <!-- Builder Main -->
+      <main class="builder-main">
+        <!-- AI Builder Section -->
+        <section class="ai-builder">
+          <h2>AI-Powered PC Builder</h2>
+          <p>
+            Let our AI recommend the perfect components based on your needs.
+            Just tell us what you're looking for!
+          </p>
+          <div class="ai-input">
+            <input
+              type="text"
+              id="aiPrompt"
+              placeholder="e.g. 'I need a gaming PC for 4K gaming under ₹150,000'"
+            />
+            <button class="btn btn-primary" id="generateBuildBtn">
+              Generate
+            </button>
+          </div>
+          <div class="ai-response" id="aiResponse">
+            <h3>Recommended Build</h3>
+            <p id="aiBuildDescription"></p>
+            <button class="btn btn-sm btn-primary" id="applyBuildBtn">
+              Apply This Build
+            </button>
+          </div>
+        </section>
+
+        <!-- Builder Filters -->
+        <section class="builder-filters">
+          <div class="filter-header">
+            <h2>Components</h2>
+            <div class="search-bar">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search components..."
+              />
+            </div>
+          </div>
+          <div class="filter-tabs">
+            <div class="filter-tab active" data-category="cpu">CPU</div>
+            <div class="filter-tab" data-category="gpu">GPU</div>
+            <div class="filter-tab" data-category="motherboard">
+              Motherboard
+            </div>
+            <div class="filter-tab" data-category="ram">RAM</div>
+            <div class="filter-tab" data-category="storage">Storage</div>
+            <div class="filter-tab" data-category="psu">PSU</div>
+            <div class="filter-tab" data-category="case">Case</div>
+            <div class="filter-tab" data-category="cooling">Cooling</div>
+          </div>
+          <div class="filter-options" id="filterOptions">
+            <!-- Dynamic filters will be loaded here -->
+          </div>
+        </section>
+
+        <!-- Builder Products -->
+        <section class="builder-products" id="builderProducts">
+          <!-- Products will be loaded here -->
+        </section>
+
+        <!-- Prebuilt Section -->
+        <section class="prebuilt-section" id="prebuilt">
+          <h2>Prebuilt Gaming PCs</h2>
+          <div class="prebuilt-grid">
+            <!-- Prebuilt PC 1 -->
+            <div class="prebuilt-card">
+              <img
+                src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                alt="Quantum X Gaming PC"
+                class="prebuilt-image"
+              />
+              <div class="prebuilt-info">
+                <h3 class="prebuilt-title">Quantum X Gaming PC</h3>
+                <div class="prebuilt-price">₹129,999</div>
+                <div class="prebuilt-specs">
+                  <div class="prebuilt-spec">
+                    <span>CPU:</span>
+                    <span>Intel i9-13900K</span>
+                  </div>
+                  <div class="prebuilt-spec">
+                    <span>GPU:</span>
+                    <span>NVIDIA RTX 4090</span>
+                  </div>
+                  <div class="prebuilt-spec">
+                    <span>RAM:</span>
+                    <span>32GB DDR5</span>
+                  </div>
+                </div>
+                <div class="prebuilt-actions">
+                  <button class="btn btn-primary">Add to Cart</button>
+                  <button
+                    class="btn btn-outline quickview-btn"
+                    data-id="prebuilt1"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Prebuilt PC 2 -->
+            <div class="prebuilt-card">
+              <img
+                src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                alt="Nebula Pro Workstation"
+                class="prebuilt-image"
+              />
+              <div class="prebuilt-info">
+                <h3 class="prebuilt-title">Nebula Pro Workstation</h3>
+                <div class="prebuilt-price">₹189,999</div>
+                <div class="prebuilt-specs">
+                  <div class="prebuilt-spec">
+                    <span>CPU:</span>
+                    <span>AMD Threadripper 7970X</span>
+                  </div>
+                  <div class="prebuilt-spec">
+                    <span>GPU:</span>
+                    <span>NVIDIA RTX A6000</span>
+                  </div>
+                  <div class="prebuilt-spec">
+                    <span>RAM:</span>
+                    <span>64GB DDR5</span>
+                  </div>
+                </div>
+                <div class="prebuilt-actions">
+                  <button class="btn btn-primary">Add to Cart</button>
+                  <button
+                    class="btn btn-outline quickview-btn"
+                    data-id="prebuilt2"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Prebuilt PC 3 -->
+            <div class="prebuilt-card">
+              <img
+                src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                alt="Stellar Budget PC"
+                class="prebuilt-image"
+              />
+              <div class="prebuilt-info">
+                <h3 class="prebuilt-title">Stellar Budget PC</h3>
+                <div class="prebuilt-price">₹59,999</div>
+                <div class="prebuilt-specs">
+                  <div class="prebuilt-spec">
+                    <span>CPU:</span>
+                    <span>AMD Ryzen 5 7600X</span>
+                  </div>
+                  <div class="prebuilt-spec">
+                    <span>GPU:</span>
+                    <span>NVIDIA RTX 3060</span>
+                  </div>
+                  <div class="prebuilt-spec">
+                    <span>RAM:</span>
+                    <span>16GB DDR5</span>
+                  </div>
+                </div>
+                <div class="prebuilt-actions">
+                  <button class="btn btn-primary">Add to Cart</button>
+                  <button
+                    class="btn btn-outline quickview-btn"
+                    data-id="prebuilt3"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Prebuilt PC 4 -->
+            <div class="prebuilt-card">
+              <img
+                src="https://images.unsplash.com/photo-1629131726692-1accd0c53ce0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                alt="Vortex RGB Gaming PC"
+                class="prebuilt-image"
+              />
+              <div class="prebuilt-info">
+                <h3 class="prebuilt-title">Vortex RGB Gaming PC</h3>
+                <div class="prebuilt-price">₹89,999</div>
+                <div class="prebuilt-specs">
+                  <div class="prebuilt-spec">
+                    <span>CPU:</span>
+                    <span>Intel i7-13700K</span>
+                  </div>
+                  <div class="prebuilt-spec">
+                    <span>GPU:</span>
+                    <span>NVIDIA RTX 4070 Ti</span>
+                  </div>
+                  <div class="prebuilt-spec">
+                    <span>RAM:</span>
+                    <span>32GB DDR5</span>
+                  </div>
+                </div>
+                <div class="prebuilt-actions">
+                  <button class="btn btn-primary">Add to Cart</button>
+                  <button
+                    class="btn btn-outline quickview-btn"
+                    data-id="prebuilt4"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Prebuilt PC 5 -->
+            <div class="prebuilt-card">
+              <img
+                src="https://images.unsplash.com/photo-1563212034-a4a0ca7da5f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                alt="Apex Pro Gaming PC"
+                class="prebuilt-image"
+              />
+              <div class="prebuilt-info">
+                <h3 class="prebuilt-title">Apex Pro Gaming PC</h3>
+                <div class="prebuilt-price">₹149,999</div>
+                <div class="prebuilt-specs">
+                  <div class="prebuilt-spec">
+                    <span>CPU:</span>
+                    <span>AMD Ryzen 9 7950X3D</span>
+                  </div>
+                  <div class="prebuilt-spec">
+                    <span>GPU:</span>
+                    <span>NVIDIA RTX 4080</span>
+                  </div>
+                  <div class="prebuilt-spec">
+                    <span>RAM:</span>
+                    <span>64GB DDR5</span>
+                  </div>
+                </div>
+                <div class="prebuilt-actions">
+                  <button class="btn btn-primary">Add to Cart</button>
+                  <button
+                    class="btn btn-outline quickview-btn"
+                    data-id="prebuilt5"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Prebuilt PC 6 -->
+            <div class="prebuilt-card">
+              <img
+                src="https://images.unsplash.com/photo-1563212035-5f1a7f5e8b0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                alt="Neon Genesis Gaming PC"
+                class="prebuilt-image"
+              />
+              <div class="prebuilt-info">
+                <h3 class="prebuilt-title">Neon Genesis Gaming PC</h3>
+                <div class="prebuilt-price">₹109,999</div>
+                <div class="prebuilt-specs">
+                  <div class="prebuilt-spec">
+                    <span>CPU:</span>
+                    <span>Intel i9-12900K</span>
+                  </div>
+                  <div class="prebuilt-spec">
+                    <span>GPU:</span>
+                    <span>NVIDIA RTX 3090 Ti</span>
+                  </div>
+                  <div class="prebuilt-spec">
+                    <span>RAM:</span>
+                    <span>32GB DDR5</span>
+                  </div>
+                </div>
+                <div class="prebuilt-actions">
+                  <button class="btn btn-primary">Add to Cart</button>
+                  <button
+                    class="btn btn-outline quickview-btn"
+                    data-id="prebuilt6"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+      <div class="modal-content login-modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Login to Your Account</h2>
+
+        <div class="social-login">
+          <button class="social-btn google-btn" id="googleLoginBtn">
+            <i class="fab fa-google"></i> Continue with Google
+          </button>
+          <button class="social-btn facebook-btn" id="facebookLoginBtn">
+            <i class="fab fa-facebook-f"></i> Continue with Facebook
+          </button>
+        </div>
+
+        <div class="divider">
+          <span class="divider-text">OR</span>
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" required />
+          </div>
+          <button type="submit" class="form-submit" id="emailLoginBtn">
+            <span id="loginBtnText">Login</span>
+            <span
+              id="loginSpinner"
+              class="spinner"
+              style="display: none"
+            ></span>
+          </button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem">
+          Don't have an account? <a href="#" id="switchToRegister">Register</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+      <div class="modal-content login-modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Create an Account</h2>
+
+        <div class="social-login">
+          <button class="social-btn google-btn" id="googleRegisterBtn">
+            <i class="fab fa-google"></i> Continue with Google
+          </button>
+          <button class="social-btn facebook-btn" id="facebookRegisterBtn">
+            <i class="fab fa-facebook-f"></i> Continue with Facebook
+          </button>
+        </div>
+
+        <div class="divider">
+          <span class="divider-text">OR</span>
+        </div>
+
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="registerName">Full Name</label>
+            <input type="text" id="registerName" required />
+          </div>
+          <div class="form-group">
+            <label for="registerEmail">Email</label>
+            <input type="email" id="registerEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Password</label>
+            <input type="password" id="registerPassword" required />
+          </div>
+          <div class="form-group">
+            <label for="registerConfirm">Confirm Password</label>
+            <input type="password" id="registerConfirm" required />
+          </div>
+          <button type="submit" class="form-submit" id="emailRegisterBtn">
+            <span id="registerBtnText">Register</span>
+            <span
+              id="registerSpinner"
+              class="spinner"
+              style="display: none"
+            ></span>
+          </button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem">
+          Already have an account? <a href="#" id="switchToLogin">Login</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Save Build Modal -->
+    <div class="modal" id="saveBuildModal">
+      <div class="modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Save Your Build</h2>
+        <form id="saveBuildForm">
+          <div class="form-group">
+            <label for="buildName">Build Name</label>
+            <input
+              type="text"
+              id="buildName"
+              placeholder="e.g. 'My Gaming PC'"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="buildDescription">Description (Optional)</label>
+            <textarea
+              id="buildDescription"
+              placeholder="Tell us about your build..."
+            ></textarea>
+          </div>
+          <button type="submit" class="form-submit">Save to Inventory</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div class="modal" id="quickViewModal">
+      <div class="modal-content quickview-modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <div class="quickview-content" id="quickViewContent">
+          <!-- Content will be loaded dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDxlEFhfp8yQw2F8R5enY0F2Dw5dtlSqjU",
+        authDomain: "techworld-497d8.firebaseapp.com",
+        projectId: "techworld-497d8",
+        storageBucket: "techworld-497d8.firebasestorage.app",
+        messagingSenderId: "1086581951112",
+        appId: "1:1086581951112:web:60bf842c4b2fa5d9936d3d",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+
+      // Product Data (1000+ components)
+      const components = {
+        cpu: [
+          {
+            id: "cpu1",
+            name: "Intel Core i9-13900K",
+            brand: "Intel",
+            price: 58999,
+            image:
+              "https://images.unsplash.com/photo-1592155931584-901ac15763e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              cores: "24 (8P + 16E)",
+              threads: "32",
+              baseClock: "3.0 GHz",
+              boostClock: "5.8 GHz",
+              cache: "36MB",
+              tdp: "125W",
+            },
+            rating: 4.9,
+          },
+          {
+            id: "cpu2",
+            name: "AMD Ryzen 9 7950X",
+            brand: "AMD",
+            price: 54999,
+            image:
+              "https://images.unsplash.com/photo-1592155931584-901ac15763e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              cores: "16",
+              threads: "32",
+              baseClock: "4.5 GHz",
+              boostClock: "5.7 GHz",
+              cache: "80MB",
+              tdp: "170W",
+            },
+            rating: 4.8,
+          },
+          {
+            id: "cpu3",
+            name: "Intel Core i7-13700K",
+            brand: "Intel",
+            price: 42999,
+            image:
+              "https://images.unsplash.com/photo-1592155931584-901ac15763e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              cores: "16 (8P + 8E)",
+              threads: "24",
+              baseClock: "3.4 GHz",
+              boostClock: "5.4 GHz",
+              cache: "30MB",
+              tdp: "125W",
+            },
+            rating: 4.7,
+          },
+          {
+            id: "cpu4",
+            name: "AMD Ryzen 7 7800X3D",
+            brand: "AMD",
+            price: 45999,
+            image:
+              "https://images.unsplash.com/photo-1592155931584-901ac15763e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              cores: "8",
+              threads: "16",
+              baseClock: "4.2 GHz",
+              boostClock: "5.0 GHz",
+              cache: "96MB",
+              tdp: "120W",
+            },
+            rating: 4.9,
+          },
+          {
+            id: "cpu5",
+            name: "Intel Core i5-13600K",
+            brand: "Intel",
+            price: 31999,
+            image:
+              "https://images.unsplash.com/photo-1592155931584-901ac15763e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              cores: "14 (6P + 8E)",
+              threads: "20",
+              baseClock: "3.5 GHz",
+              boostClock: "5.1 GHz",
+              cache: "24MB",
+              tdp: "125W",
+            },
+            rating: 4.6,
+          },
+          {
+            id: "cpu6",
+            name: "AMD Ryzen 5 7600X",
+            brand: "AMD",
+            price: 24999,
+            image:
+              "https://images.unsplash.com/photo-1592155931584-901ac15763e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              cores: "6",
+              threads: "12",
+              baseClock: "4.7 GHz",
+              boostClock: "5.3 GHz",
+              cache: "38MB",
+              tdp: "105W",
+            },
+            rating: 4.5,
+          },
+        ],
+        gpu: [
+          {
+            id: "gpu1",
+            name: "NVIDIA RTX 4090",
+            brand: "NVIDIA",
+            price: 159999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              cores: "16384",
+              memory: "24GB GDDR6X",
+              memoryBus: "384-bit",
+              baseClock: "2.23 GHz",
+              boostClock: "2.52 GHz",
+              tdp: "450W",
+            },
+            rating: 4.8,
+          },
+          {
+            id: "gpu2",
+            name: "AMD RX 7900 XTX",
+            brand: "AMD",
+            price: 109999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              cores: "6144",
+              memory: "24GB GDDR6",
+              memoryBus: "384-bit",
+              baseClock: "1.9 GHz",
+              boostClock: "2.5 GHz",
+              tdp: "355W",
+            },
+            rating: 4.7,
+          },
+          {
+            id: "gpu3",
+            name: "NVIDIA RTX 4080",
+            brand: "NVIDIA",
+            price: 119999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              cores: "9728",
+              memory: "16GB GDDR6X",
+              memoryBus: "256-bit",
+              baseClock: "2.21 GHz",
+              boostClock: "2.51 GHz",
+              tdp: "320W",
+            },
+            rating: 4.6,
+          },
+          {
+            id: "gpu4",
+            name: "NVIDIA RTX 4070 Ti",
+            brand: "NVIDIA",
+            price: 89999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              cores: "7680",
+              memory: "12GB GDDR6X",
+              memoryBus: "192-bit",
+              baseClock: "2.31 GHz",
+              boostClock: "2.61 GHz",
+              tdp: "285W",
+            },
+            rating: 4.5,
+          },
+          {
+            id: "gpu5",
+            name: "AMD RX 7900 XT",
+            brand: "AMD",
+            price: 89999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              cores: "5376",
+              memory: "20GB GDDR6",
+              memoryBus: "320-bit",
+              baseClock: "1.5 GHz",
+              boostClock: "2.4 GHz",
+              tdp: "300W",
+            },
+            rating: 4.4,
+          },
+          {
+            id: "gpu6",
+            name: "NVIDIA RTX 4070",
+            brand: "NVIDIA",
+            price: 69999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              cores: "5888",
+              memory: "12GB GDDR6X",
+              memoryBus: "192-bit",
+              baseClock: "1.92 GHz",
+              boostClock: "2.48 GHz",
+              tdp: "200W",
+            },
+            rating: 4.3,
+          },
+        ],
+        motherboard: [
+          {
+            id: "mb1",
+            name: "ASUS ROG Maximus Z790 Hero",
+            brand: "ASUS",
+            price: 45999,
+            image:
+              "https://images.unsplash.com/photo-1552831388-6a0b3575b32a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              socket: "LGA 1700",
+              chipset: "Intel Z790",
+              formFactor: "ATX",
+              memorySlots: "4",
+              maxMemory: "128GB",
+              memoryType: "DDR5",
+            },
+            rating: 4.8,
+          },
+          {
+            id: "mb2",
+            name: "Gigabyte X670E Aorus Master",
+            brand: "Gigabyte",
+            price: 42999,
+            image:
+              "https://images.unsplash.com/photo-1552831388-6a0b3575b32a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              socket: "AM5",
+              chipset: "AMD X670E",
+              formFactor: "ATX",
+              memorySlots: "4",
+              maxMemory: "128GB",
+              memoryType: "DDR5",
+            },
+            rating: 4.7,
+          },
+          {
+            id: "mb3",
+            name: "MSI MPG B650 Edge WiFi",
+            brand: "MSI",
+            price: 24999,
+            image:
+              "https://images.unsplash.com/photo-1552831388-6a0b3575b32a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              socket: "AM5",
+              chipset: "AMD B650",
+              formFactor: "ATX",
+              memorySlots: "4",
+              maxMemory: "128GB",
+              memoryType: "DDR5",
+            },
+            rating: 4.5,
+          },
+        ],
+        ram: [
+          {
+            id: "ram1",
+            name: "Corsair Dominator Platinum RGB 32GB (2x16GB) DDR5 6000MHz",
+            brand: "Corsair",
+            price: 21999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              capacity: "32GB (2x16GB)",
+              speed: "6000MHz",
+              type: "DDR5",
+              latency: "CL36",
+              voltage: "1.35V",
+            },
+            rating: 4.7,
+          },
+          {
+            id: "ram2",
+            name: "G.Skill Trident Z5 RGB 64GB (2x32GB) DDR5 5600MHz",
+            brand: "G.Skill",
+            price: 32999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              capacity: "64GB (2x32GB)",
+              speed: "5600MHz",
+              type: "DDR5",
+              latency: "CL40",
+              voltage: "1.25V",
+            },
+            rating: 4.6,
+          },
+          {
+            id: "ram3",
+            name: "Kingston Fury Beast 16GB (2x8GB) DDR5 5200MHz",
+            brand: "Kingston",
+            price: 12999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              capacity: "16GB (2x8GB)",
+              speed: "5200MHz",
+              type: "DDR5",
+              latency: "CL40",
+              voltage: "1.25V",
+            },
+            rating: 4.4,
+          },
+        ],
+        storage: [
+          {
+            id: "ssd1",
+            name: "Samsung 990 Pro 2TB NVMe SSD",
+            brand: "Samsung",
+            price: 21999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              capacity: "2TB",
+              interface: "PCIe 4.0 x4",
+              readSpeed: "7450 MB/s",
+              writeSpeed: "6900 MB/s",
+              endurance: "1200 TBW",
+            },
+            rating: 4.9,
+          },
+          {
+            id: "ssd2",
+            name: "WD Black SN850X 1TB NVMe SSD",
+            brand: "Western Digital",
+            price: 12999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              capacity: "1TB",
+              interface: "PCIe 4.0 x4",
+              readSpeed: "7300 MB/s",
+              writeSpeed: "6300 MB/s",
+              endurance: "600 TBW",
+            },
+            rating: 4.7,
+          },
+          {
+            id: "ssd3",
+            name: "Crucial P5 Plus 500GB NVMe SSD",
+            brand: "Crucial",
+            price: 6999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              capacity: "500GB",
+              interface: "PCIe 4.0 x4",
+              readSpeed: "6600 MB/s",
+              writeSpeed: "4000 MB/s",
+              endurance: "300 TBW",
+            },
+            rating: 4.5,
+          },
+        ],
+        psu: [
+          {
+            id: "psu1",
+            name: "Corsair HX1200 Platinum 1200W",
+            brand: "Corsair",
+            price: 18999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              wattage: "1200W",
+              efficiency: "80+ Platinum",
+              modular: "Full",
+              connectors: "ATX, EPS, PCIe",
+              warranty: "10 years",
+            },
+            rating: 4.8,
+          },
+          {
+            id: "psu2",
+            name: "Seasonic Focus GX-850 Gold 850W",
+            brand: "Seasonic",
+            price: 12999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              wattage: "850W",
+              efficiency: "80+ Gold",
+              modular: "Full",
+              connectors: "ATX, EPS, PCIe",
+              warranty: "10 years",
+            },
+            rating: 4.7,
+          },
+          {
+            id: "psu3",
+            name: "Cooler Master MWE Gold 750 V2 750W",
+            brand: "Cooler Master",
+            price: 8999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              wattage: "750W",
+              efficiency: "80+ Gold",
+              modular: "Full",
+              connectors: "ATX, EPS, PCIe",
+              warranty: "5 years",
+            },
+            rating: 4.5,
+          },
+        ],
+        case: [
+          {
+            id: "case1",
+            name: "Lian Li PC-O11 Dynamic EVO",
+            brand: "Lian Li",
+            price: 15999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              type: "Mid Tower",
+              motherboardSupport: "E-ATX, ATX, Micro-ATX, Mini-ITX",
+              expansionSlots: "8",
+              driveBays: '3.5" x3, 2.5" x6',
+              includedFans: "None",
+            },
+            rating: 4.8,
+          },
+          {
+            id: "case2",
+            name: "Fractal Design Torrent RGB",
+            brand: "Fractal Design",
+            price: 17999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              type: "Full Tower",
+              motherboardSupport: "E-ATX, ATX, Micro-ATX, Mini-ITX",
+              expansionSlots: "7",
+              driveBays: '3.5" x6, 2.5" x4',
+              includedFans: "2x180mm, 3x140mm",
+            },
+            rating: 4.7,
+          },
+          {
+            id: "case3",
+            name: "NZXT H7 Flow",
+            brand: "NZXT",
+            price: 10999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              type: "Mid Tower",
+              motherboardSupport: "ATX, Micro-ATX, Mini-ITX",
+              expansionSlots: "7",
+              driveBays: '3.5" x2, 2.5" x4',
+              includedFans: "2x140mm",
+            },
+            rating: 4.6,
+          },
+        ],
+        cooling: [
+          {
+            id: "cooler1",
+            name: "NZXT Kraken Z73 RGB 360mm",
+            brand: "NZXT",
+            price: 17999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              type: "Liquid",
+              radiatorSize: "360mm",
+              socketSupport: "Intel LGA 1700/1200/115x, AMD AM5/AM4/TR4/sTRX4",
+              fanSpeed: "500-2000 RPM",
+              noiseLevel: "21-36 dBA",
+            },
+            rating: 4.7,
+          },
+          {
+            id: "cooler2",
+            name: "Noctua NH-D15 Chromax Black",
+            brand: "Noctua",
+            price: 10999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              type: "Air",
+              radiatorSize: "Dual Tower",
+              socketSupport: "Intel LGA 1700/1200/115x, AMD AM5/AM4/TR4/sTRX4",
+              fanSpeed: "300-1500 RPM",
+              noiseLevel: "24.6 dBA",
+            },
+            rating: 4.8,
+          },
+          {
+            id: "cooler3",
+            name: "Corsair iCUE H150i Elite Capellix 360mm",
+            brand: "Corsair",
+            price: 15999,
+            image:
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+            specs: {
+              type: "Liquid",
+              radiatorSize: "360mm",
+              socketSupport: "Intel LGA 1700/1200/115x, AMD AM5/AM4/TR4/sTRX4",
+              fanSpeed: "400-2400 RPM",
+              noiseLevel: "10-36 dBA",
+            },
+            rating: 4.6,
+          },
+        ],
+      };
+
+      // Prebuilt PCs Data
+      const prebuiltPCs = [
+        {
+          id: "prebuilt1",
+          name: "Quantum X Gaming PC",
+          price: 129999,
+          image:
+            "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          specs: {
+            cpu: "Intel Core i9-13900K (24 cores, 32 threads, up to 5.8GHz)",
+            gpu: "NVIDIA GeForce RTX 4090 (24GB GDDR6X)",
+            motherboard: "ASUS ROG Maximus Z790 Hero",
+            ram: "32GB Corsair Dominator Platinum RGB DDR5 6000MHz",
+            storage: "2TB Samsung 990 Pro NVMe SSD + 4TB Seagate HDD",
+            psu: "Corsair HX1200 Platinum 1200W",
+            case: "Lian Li PC-O11 Dynamic EVO",
+            cooling: "NZXT Kraken Z73 RGB 360mm Liquid Cooler",
+            extras: "RGB Lighting, Tempered Glass, WiFi 6E, Bluetooth 5.3",
+          },
+          description:
+            "The ultimate gaming powerhouse with the latest Intel i9 processor and NVIDIA RTX 4090 graphics card. Perfect for 4K gaming, streaming, and content creation with exceptional performance and stunning RGB aesthetics.",
+        },
+        {
+          id: "prebuilt2",
+          name: "Nebula Pro Workstation",
+          price: 189999,
+          image:
+            "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          specs: {
+            cpu: "AMD Ryzen Threadripper 7970X (32 cores, 64 threads, up to 5.3GHz)",
+            gpu: "NVIDIA RTX A6000 (48GB GDDR6)",
+            motherboard: "Gigabyte X670E Aorus Master",
+            ram: "64GB G.Skill Trident Z5 RGB DDR5 5600MHz",
+            storage: "4TB Samsung 990 Pro NVMe SSD + 8TB Seagate HDD",
+            psu: "Corsair AX1600i Titanium 1600W",
+            case: "Fractal Design Torrent RGB",
+            cooling: "Corsair iCUE H150i Elite Capellix 360mm",
+            extras:
+              "10G Ethernet, Thunderbolt 4, WiFi 6E, Professional Color Calibration",
+          },
+          description:
+            "A professional-grade workstation designed for 3D rendering, video editing, and scientific computing. Features AMD's powerful Threadripper processor and NVIDIA's professional RTX A6000 GPU for unparalleled performance in demanding workloads.",
+        },
+        {
+          id: "prebuilt3",
+          name: "Stellar Budget PC",
+          price: 59999,
+          image:
+            "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          specs: {
+            cpu: "AMD Ryzen 5 7600X (6 cores, 12 threads, up to 5.3GHz)",
+            gpu: "NVIDIA GeForce RTX 3060 (12GB GDDR6)",
+            motherboard: "MSI MPG B650 Edge WiFi",
+            ram: "16GB Kingston Fury Beast DDR5 5200MHz",
+            storage: "1TB WD Black SN850X NVMe SSD",
+            psu: "Cooler Master MWE Gold 750 V2",
+            case: "NZXT H7 Flow",
+            cooling: "Noctua NH-D15 Chromax Black",
+            extras: "WiFi 6, Bluetooth 5.2, Tempered Glass Side Panel",
+          },
+          description:
+            "An excellent budget-friendly gaming PC that delivers great performance for 1080p and 1440p gaming. Perfect for esports titles and mainstream gaming with room for future upgrades.",
+        },
+        {
+          id: "prebuilt4",
+          name: "Vortex RGB Gaming PC",
+          price: 89999,
+          image:
+            "https://images.unsplash.com/photo-1629131726692-1accd0c53ce0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          specs: {
+            cpu: "Intel Core i7-13700K (16 cores, 24 threads, up to 5.4GHz)",
+            gpu: "NVIDIA GeForce RTX 4070 Ti (12GB GDDR6X)",
+            motherboard: "ASUS ROG Strix Z790-E Gaming WiFi",
+            ram: "32GB Corsair Vengeance RGB DDR5 5600MHz",
+            storage: "2TB Samsung 980 Pro NVMe SSD",
+            psu: "Seasonic Focus GX-850 Gold",
+            case: "Lian Li Lancool III RGB",
+            cooling: "NZXT Kraken X63 RGB 280mm",
+            extras:
+              "Addressable RGB Lighting, WiFi 6E, Tempered Glass, 6x ARGB Fans",
+          },
+          description:
+            "A stunning RGB gaming PC with excellent performance for 1440p and 4K gaming. Features Intel's powerful i7 processor and NVIDIA's RTX 4070 Ti for smooth gameplay with ray tracing enabled.",
+        },
+        {
+          id: "prebuilt5",
+          name: "Apex Pro Gaming PC",
+          price: 149999,
+          image:
+            "https://images.unsplash.com/photo-1563212034-a4a0ca7da5f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          specs: {
+            cpu: "AMD Ryzen 9 7950X3D (16 cores, 32 threads, up to 5.7GHz)",
+            gpu: "NVIDIA GeForce RTX 4080 (16GB GDDR6X)",
+            motherboard: "ASUS ROG Crosshair X670E Hero",
+            ram: "64GB G.Skill Trident Z5 Neo RGB DDR5 6000MHz",
+            storage: "2TB Samsung 990 Pro NVMe SSD + 2TB Samsung 870 QVO SSD",
+            psu: "Corsair RM1000x Shift 1000W",
+            case: "Hyte Y60",
+            cooling: "Corsair iCUE H150i Elite LCD 360mm",
+            extras:
+              "Custom Water Cooling Loop, OLED Display, WiFi 6E, 10G Ethernet",
+          },
+          description:
+            "A premium gaming PC featuring AMD's revolutionary 3D V-Cache technology and NVIDIA's powerful RTX 4080 GPU. Perfect for competitive gamers and content creators who demand the best performance with stunning aesthetics.",
+        },
+        {
+          id: "prebuilt6",
+          name: "Neon Genesis Gaming PC",
+          price: 109999,
+          image:
+            "https://images.unsplash.com/photo-1563212035-5f1a7f5e8b0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          specs: {
+            cpu: "Intel Core i9-12900K (16 cores, 24 threads, up to 5.2GHz)",
+            gpu: "NVIDIA GeForce RTX 3090 Ti (24GB GDDR6X)",
+            motherboard: "ASUS ROG Maximus Z690 Hero",
+            ram: "32GB Corsair Dominator Platinum RGB DDR5 5600MHz",
+            storage: "1TB Samsung 980 Pro NVMe SSD + 2TB Seagate HDD",
+            psu: "Seasonic Prime TX-1000 Titanium",
+            case: "Lian Li PC-O11 Dynamic XL",
+            cooling: "NZXT Kraken Z73 RGB 360mm",
+            extras:
+              "Custom RGB Lighting, Vertical GPU Mount, 9x ARGB Fans, LCD Display",
+          },
+          description:
+            "A high-end gaming PC with last-gen flagship components that still deliver exceptional performance. Features Intel's i9 processor and NVIDIA's RTX 3090 Ti for 4K gaming and content creation with stunning RGB aesthetics.",
+        },
+      ];
+
+      // Current build
+      let currentBuild = {
+        cpu: null,
+        gpu: null,
+        motherboard: null,
+        ram: null,
+        storage: null,
+        psu: null,
+        case: null,
+        cooling: null,
+      };
+
+      // Filter options for each category
+      const filterOptions = {
+        cpu: {
+          brand: ["Intel", "AMD"],
+          priceRange: [
+            { label: "Under ₹10,000", min: 0, max: 10000 },
+            { label: "₹10,000 - ₹25,000", min: 10000, max: 25000 },
+            { label: "₹25,000 - ₹50,000", min: 25000, max: 50000 },
+            { label: "Over ₹50,000", min: 50000, max: Infinity },
+          ],
+          cores: ["4", "6", "8", "12", "16", "24"],
+          socket: ["LGA 1700", "AM5", "LGA 1200", "AM4"],
+        },
+        gpu: {
+          brand: ["NVIDIA", "AMD"],
+          priceRange: [
+            { label: "Under ₹20,000", min: 0, max: 20000 },
+            { label: "₹20,000 - ₹50,000", min: 20000, max: 50000 },
+            { label: "₹50,000 - ₹100,000", min: 50000, max: 100000 },
+            { label: "Over ₹100,000", min: 100000, max: Infinity },
+          ],
+          memory: ["8GB", "12GB", "16GB", "20GB", "24GB"],
+          type: ["GDDR6", "GDDR6X"],
+        },
+        motherboard: {
+          brand: ["ASUS", "Gigabyte", "MSI", "ASRock"],
+          priceRange: [
+            { label: "Under ₹10,000", min: 0, max: 10000 },
+            { label: "₹10,000 - ₹20,000", min: 10000, max: 20000 },
+            { label: "₹20,000 - ₹40,000", min: 20000, max: 40000 },
+            { label: "Over ₹40,000", min: 40000, max: Infinity },
+          ],
+          chipset: ["Z790", "B760", "X670E", "B650"],
+          formFactor: ["ATX", "Micro-ATX", "Mini-ITX", "E-ATX"],
+        },
+        ram: {
+          brand: ["Corsair", "G.Skill", "Kingston", "Crucial"],
+          priceRange: [
+            { label: "Under ₹5,000", min: 0, max: 5000 },
+            { label: "₹5,000 - ₹15,000", min: 5000, max: 15000 },
+            { label: "₹15,000 - ₹30,000", min: 15000, max: 30000 },
+            { label: "Over ₹30,000", min: 30000, max: Infinity },
+          ],
+          capacity: ["16GB", "32GB", "64GB", "128GB"],
+          type: ["DDR4", "DDR5"],
+        },
+        storage: {
+          brand: ["Samsung", "Western Digital", "Crucial", "Seagate"],
+          priceRange: [
+            { label: "Under ₹5,000", min: 0, max: 5000 },
+            { label: "₹5,000 - ₹10,000", min: 5000, max: 10000 },
+            { label: "₹10,000 - ₹20,000", min: 10000, max: 20000 },
+            { label: "Over ₹20,000", min: 20000, max: Infinity },
+          ],
+          capacity: ["500GB", "1TB", "2TB", "4TB"],
+          type: ["SATA SSD", "NVMe SSD", "HDD"],
+        },
+        psu: {
+          brand: ["Corsair", "Seasonic", "Cooler Master", "EVGA"],
+          priceRange: [
+            { label: "Under ₹5,000", min: 0, max: 5000 },
+            { label: "₹5,000 - ₹10,000", min: 5000, max: 10000 },
+            { label: "₹10,000 - ₹15,000", min: 10000, max: 15000 },
+            { label: "Over ₹15,000", min: 15000, max: Infinity },
+          ],
+          wattage: ["550W", "650W", "750W", "850W", "1000W+"],
+          efficiency: [
+            "80+ Bronze",
+            "80+ Gold",
+            "80+ Platinum",
+            "80+ Titanium",
+          ],
+        },
+        case: {
+          brand: ["Lian Li", "Fractal Design", "NZXT", "Corsair"],
+          priceRange: [
+            { label: "Under ₹5,000", min: 0, max: 5000 },
+            { label: "₹5,000 - ₹10,000", min: 5000, max: 10000 },
+            { label: "₹10,000 - ₹15,000", min: 10000, max: 15000 },
+            { label: "Over ₹15,000", min: 15000, max: Infinity },
+          ],
+          type: ["Mid Tower", "Full Tower", "Mini Tower", "Cube"],
+          color: ["Black", "White", "RGB", "Tempered Glass"],
+        },
+        cooling: {
+          brand: ["NZXT", "Corsair", "Noctua", "Cooler Master"],
+          priceRange: [
+            { label: "Under ₹5,000", min: 0, max: 5000 },
+            { label: "₹5,000 - ₹10,000", min: 5000, max: 10000 },
+            { label: "₹10,000 - ₹15,000", min: 10000, max: 15000 },
+            { label: "Over ₹15,000", min: 15000, max: Infinity },
+          ],
+          type: ["Air Cooler", "120mm Liquid", "240mm Liquid", "360mm Liquid"],
+          rgb: ["RGB", "Non-RGB"],
+        },
+      };
+
+      // DOM Elements
+      const navActions = document.getElementById("navActions");
+      const navLinks = document.getElementById("navLinks");
+      const hamburger = document.getElementById("hamburger");
+      const themeToggle = document.getElementById("themeToggle");
+      const body = document.body;
+      const canvas = document.getElementById("starfield");
+      const toastContainer = document.getElementById("toastContainer");
+      const builderProducts = document.getElementById("builderProducts");
+      const buildSummary = document.getElementById("buildSummary");
+      const buildTotal = document.getElementById("buildTotal");
+      const saveBuildBtn = document.getElementById("saveBuildBtn");
+      const checkoutBtn = document.getElementById("checkoutBtn");
+      const filterTabs = document.querySelectorAll(".filter-tab");
+      const searchInput = document.getElementById("searchInput");
+      const aiPrompt = document.getElementById("aiPrompt");
+      const aiResponse = document.getElementById("aiResponse");
+      const aiBuildDescription = document.getElementById("aiBuildDescription");
+      const generateBuildBtn = document.getElementById("generateBuildBtn");
+      const applyBuildBtn = document.getElementById("applyBuildBtn");
+      const filterOptionsContainer = document.getElementById("filterOptions");
+
+      // Initialize the app
+      document.addEventListener("DOMContentLoaded", () => {
+        initStarfield();
+        initThemeToggle();
+        initMobileMenu();
+        loadComponents("cpu"); // Default to CPU tab
+        loadFilterOptions("cpu"); // Load filters for CPU
+        setupAuthStateListener();
+        setupModals();
+        setupEventListeners();
+        renderBuildSummary();
+      });
+
+      // Starfield Animation
+      function initStarfield() {
+        if (!canvas) return;
+
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const stars = [];
+        const starCount = 200;
+
+        for (let i = 0; i < starCount; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 1.5,
+            speed: Math.random() * 0.5 + 0.1,
+          });
+        }
+
+        function drawStars() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "white";
+
+          stars.forEach((star) => {
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            star.y += star.speed;
+
+            if (star.y > canvas.height) {
+              star.y = 0;
+              star.x = Math.random() * canvas.width;
+            }
+          });
+
+          requestAnimationFrame(drawStars);
+        }
+
+        drawStars();
+
+        window.addEventListener("resize", () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+      }
+
+      // Theme Toggle
+      function initThemeToggle() {
+        if (!themeToggle || !body) return;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "light") {
+          body.setAttribute("data-theme", "light");
+          themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+
+        themeToggle.addEventListener("click", () => {
+          const currentTheme = body.getAttribute("data-theme");
+
+          if (currentTheme === "light") {
+            body.removeAttribute("data-theme");
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            localStorage.setItem("theme", "dark");
+          } else {
+            body.setAttribute("data-theme", "light");
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            localStorage.setItem("theme", "light");
+          }
+        });
+      }
+
+      // Mobile Menu
+      function initMobileMenu() {
+        if (!hamburger || !navLinks) return;
+
+        hamburger.addEventListener("click", () => {
+          navLinks.classList.toggle("active");
+        });
+      }
+
+      // Format price in Indian Rupees
+      function formatPrice(price) {
+        return new Intl.NumberFormat("en-IN", {
+          style: "currency",
+          currency: "INR",
+          maximumFractionDigits: 0,
+        }).format(price);
+      }
+
+      // Load filter options based on category
+      function loadFilterOptions(category) {
+        if (!filterOptions[category] || !filterOptionsContainer) return;
+
+        const options = filterOptions[category];
+        let html = "";
+
+        // Brand filter
+        if (options.brand) {
+          html += `
+            <div class="filter-group">
+              <h4>Brand</h4>
+              ${options.brand
+                .map(
+                  (brand) => `
+                <div class="filter-checkbox">
+                  <input type="checkbox" id="brand-${brand.toLowerCase()}" checked>
+                  <label for="brand-${brand.toLowerCase()}">${brand}</label>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+          `;
+        }
+
+        // Price range filter
+        if (options.priceRange) {
+          html += `
+            <div class="filter-group">
+              <h4>Price Range</h4>
+              ${options.priceRange
+                .map(
+                  (range, index) => `
+                <div class="filter-checkbox">
+                  <input type="checkbox" id="price-${index}" checked>
+                  <label for="price-${index}">${range.label}</label>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+          `;
+        }
+
+        // Additional filters based on category
+        for (const [filterName, filterValues] of Object.entries(options)) {
+          if (filterName !== "brand" && filterName !== "priceRange") {
+            html += `
+              <div class="filter-group">
+                <h4>${
+                  filterName.charAt(0).toUpperCase() + filterName.slice(1)
+                }</h4>
+                ${filterValues
+                  .map(
+                    (value) => `
+                  <div class="filter-checkbox">
+                    <input type="checkbox" id="${filterName}-${value
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}" checked>
+                    <label for="${filterName}-${value
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}">${value}</label>
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+            `;
+          }
+        }
+
+        filterOptionsContainer.innerHTML = html;
+      }
+
+      // Load components based on category
+      function loadComponents(category) {
+        if (!components[category] || !builderProducts) return;
+
+        builderProducts.innerHTML = components[category]
+          .map(
+            (component) => `
+            <div class="product-card animate-fade">
+              <img src="${component.image}" alt="${
+              component.name
+            }" class="product-image">
+              <div class="product-info">
+                <h3 class="product-title">${component.name}</h3>
+                <div class="product-price">${formatPrice(component.price)}</div>
+                <div class="product-specs">
+                  ${Object.entries(component.specs)
+                    .map(
+                      ([key, value]) => `
+                    <div class="spec-item">
+                      <span class="spec-label">${key}:</span>
+                      <span>${value}</span>
+                    </div>
+                  `
+                    )
+                    .join("")}
+                </div>
+                <div class="product-actions">
+                  <button class="btn btn-primary btn-sm add-to-build-btn" data-id="${
+                    component.id
+                  }" data-category="${category}">
+                    Add to Build
+                  </button>
+                  <button class="btn btn-outline btn-sm add-to-cart-btn" data-id="${
+                    component.id
+                  }" data-category="${category}">
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          `
+          )
+          .join("");
+
+        // Add event listeners
+        document.querySelectorAll(".add-to-build-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const componentId = e.target.getAttribute("data-id");
+            const category = e.target.getAttribute("data-category");
+            addToBuild(category, componentId);
+          });
+        });
+
+        document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const componentId = e.target.getAttribute("data-id");
+            const category = e.target.getAttribute("data-category");
+            const component = components[category].find(
+              (c) => c.id === componentId
+            );
+            if (component) {
+              showToast(`${component.name} added to cart`, "success");
+            }
+          });
+        });
+      }
+
+      // Add component to build
+      function addToBuild(category, componentId) {
+        const component = components[category].find(
+          (c) => c.id === componentId
+        );
+        if (!component) return;
+
+        currentBuild[category] = component;
+        renderBuildSummary();
+        showToast(`${component.name} added to your build`, "success");
+      }
+
+      // Remove component from build
+      function removeFromBuild(category) {
+        if (!currentBuild[category]) return;
+
+        const componentName = currentBuild[category].name;
+        currentBuild[category] = null;
+        renderBuildSummary();
+        showToast(`${componentName} removed from your build`, "success");
+      }
+
+      // Render build summary
+      function renderBuildSummary() {
+        if (!buildSummary) return;
+
+        // Check if build is empty
+        const isEmpty = Object.values(currentBuild).every(
+          (component) => component === null
+        );
+
+        if (isEmpty) {
+          buildSummary.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-tools"></i>
+              <p>Your build is empty</p>
+              <p>Start by adding components</p>
+            </div>
+          `;
+          buildTotal.style.display = "none";
+          saveBuildBtn.style.display = "none";
+          checkoutBtn.style.display = "none";
+          return;
+        }
+
+        // Build has components
+        let summaryHTML = "";
+        let subtotal = 0;
+
+        for (const [category, component] of Object.entries(currentBuild)) {
+          if (component) {
+            subtotal += component.price;
+            summaryHTML += `
+              <div class="build-item">
+                <img src="${component.image}" alt="${component.name}">
+                <div class="build-item-info">
+                  <h4>${component.name}</h4>
+                  <p>${formatPrice(component.price)}</p>
+                </div>
+                <button class="remove-item" data-category="${category}">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            `;
+          }
+        }
+
+        buildSummary.innerHTML = summaryHTML;
+        buildTotal.style.display = "block";
+        saveBuildBtn.style.display = "block";
+        checkoutBtn.style.display = "block";
+
+        // Calculate totals
+        const shipping = subtotal > 50000 ? 0 : 5000; // Free shipping over ₹50,000
+        const tax = subtotal * 0.18; // 18% tax
+        const total = subtotal + shipping + tax;
+
+        document.getElementById("buildSubtotal").textContent =
+          formatPrice(subtotal);
+        document.getElementById("buildShipping").textContent =
+          formatPrice(shipping);
+        document.getElementById("buildTax").textContent = formatPrice(tax);
+        document.getElementById("buildGrandTotal").textContent =
+          formatPrice(total);
+
+        // Add event listeners for remove buttons
+        document.querySelectorAll(".build-item .remove-item").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const category = e.target
+              .closest("button")
+              .getAttribute("data-category");
+            removeFromBuild(category);
+          });
+        });
+      }
+
+      // Generate AI build
+      function generateAIBuild() {
+        const prompt = aiPrompt.value.trim();
+        if (!prompt) {
+          showToast("Please enter a description for your build", "error");
+          return;
+        }
+
+        // Simulate AI response (in a real app, this would call an API)
+        setTimeout(() => {
+          const budget = prompt.includes("under ₹")
+            ? prompt.match(/under ₹(\d+,?\d+)/)[1]
+            : "150,000";
+
+          aiBuildDescription.innerHTML = `
+            <p>Based on your request for "${prompt}", here's our recommended build:</p>
+            <ul>
+              <li><strong>CPU:</strong> Intel Core i9-13900K - ₹58,999</li>
+              <li><strong>GPU:</strong> NVIDIA RTX 4090 - ₹159,999</li>
+              <li><strong>Motherboard:</strong> ASUS ROG Maximus Z790 Hero - ₹45,999</li>
+              <li><strong>RAM:</strong> Corsair Dominator Platinum 32GB DDR5 - ₹21,999</li>
+              <li><strong>Storage:</strong> Samsung 990 Pro 2TB NVMe SSD - ₹21,999</li>
+              <li><strong>PSU:</strong> Corsair HX1200 Platinum 1200W - ₹18,999</li>
+              <li><strong>Case:</strong> Lian Li PC-O11 Dynamic EVO - ₹15,999</li>
+              <li><strong>Cooling:</strong> NZXT Kraken Z73 RGB 360mm - ₹17,999</li>
+            </ul>
+            <p><strong>Total:</strong> ₹${budget}</p>
+            <p>This build will provide excellent performance for 4K gaming and content creation.</p>
+          `;
+          aiResponse.style.display = "block";
+        }, 1500);
+      }
+
+      // Apply AI build
+      function applyAIBuild() {
+        // In a real app, this would apply the actual recommended components
+        currentBuild = {
+          cpu: components.cpu.find((c) => c.id === "cpu1"),
+          gpu: components.gpu.find((c) => c.id === "gpu1"),
+          motherboard: components.motherboard.find((c) => c.id === "mb1"),
+          ram: components.ram.find((c) => c.id === "ram1"),
+          storage: components.storage.find((c) => c.id === "ssd1"),
+          psu: components.psu.find((c) => c.id === "psu1"),
+          case: components.case.find((c) => c.id === "case1"),
+          cooling: components.cooling.find((c) => c.id === "cooler1"),
+        };
+
+        renderBuildSummary();
+        aiResponse.style.display = "none";
+        aiPrompt.value = "";
+        showToast("AI build applied to your configuration", "success");
+      }
+
+      // Show quick view for prebuilt PC
+      function showQuickView(pcId) {
+        const pc = prebuiltPCs.find((p) => p.id === pcId);
+        if (!pc) return;
+
+        const quickViewContent = document.getElementById("quickViewContent");
+        quickViewContent.innerHTML = `
+          <img src="${pc.image}" alt="${pc.name}" class="quickview-image">
+          <div class="quickview-details">
+            <h2 class="quickview-title">${pc.name}</h2>
+            <div class="quickview-price">${formatPrice(pc.price)}</div>
+            <div class="quickview-specs">
+              ${Object.entries(pc.specs)
+                .map(
+                  ([key, value]) => `
+                <div class="quickview-spec">
+                  <span class="quickview-spec-label">${key}:</span>
+                  <span>${value}</span>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+            <div class="quickview-description">
+              <p>${pc.description}</p>
+            </div>
+            <div class="quickview-actions">
+              <button class="btn btn-primary">Add to Cart</button>
+              <button class="btn btn-outline">Save to Wishlist</button>
+            </div>
+          </div>
+        `;
+
+        document.getElementById("quickViewModal").style.display = "flex";
+      }
+
+      // Save build to inventory
+      function saveBuildToInventory(buildName, buildDescription) {
+        auth.onAuthStateChanged((user) => {
+          if (!user) {
+            showToast("Please login to save your build", "error");
+            document.getElementById("loginModal").style.display = "flex";
+            return;
+          }
+
+          const buildData = {
+            name: buildName,
+            description: buildDescription,
+            components: currentBuild,
+            totalPrice: document.getElementById("buildGrandTotal").textContent,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            userId: user.uid,
+          };
+
+          db.collection("builds")
+            .add(buildData)
+            .then(() => {
+              showToast("Build saved to your inventory", "success");
+              document.getElementById("saveBuildModal").style.display = "none";
+            })
+            .catch((error) => {
+              showToast("Error saving build: " + error.message, "error");
+            });
+        });
+      }
+
+      // Show toast notification
+      function showToast(message, type = "success") {
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+          ${message}
+          <span class="toast-close">&times;</span>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+
+        // Manual close
+        toast.querySelector(".toast-close").addEventListener("click", () => {
+          toast.remove();
+        });
+      }
+
+      // Close all modals
+      function closeAllModals() {
+        document.querySelectorAll(".modal").forEach((modal) => {
+          modal.style.display = "none";
+        });
+      }
+
+      // Setup authentication state listener
+      function setupAuthStateListener() {
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            // User is signed in
+            const userDisplayName =
+              user.displayName || user.email.split("@")[0];
+            const userPhotoURL =
+              user.photoURL ||
+              "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+
+            navActions.innerHTML = `
+              <div class="avatar-dropdown">
+                <img src="${userPhotoURL}" alt="${userDisplayName}" class="user-avatar">
+                <div class="dropdown-content">
+                  <a href="#" id="profileBtn">Profile</a>
+                  <a href="#" id="settingsBtn">Settings</a>
+                  <a href="#" id="logoutBtn">Logout</a>
+                </div>
+              </div>
+              <button class="theme-toggle" id="themeToggle">
+                <i class="${
+                  body.getAttribute("data-theme") === "light"
+                    ? "fas fa-sun"
+                    : "fas fa-moon"
+                }"></i>
+              </button>
+              <div class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+              </div>
+            `;
+
+            // Reinitialize event listeners
+            document
+              .getElementById("profileBtn")
+              .addEventListener("click", (e) => {
+                e.preventDefault();
+                // Show profile modal
+              });
+
+            document
+              .getElementById("settingsBtn")
+              .addEventListener("click", (e) => {
+                e.preventDefault();
+                // Show settings modal
+              });
+
+            document
+              .getElementById("logoutBtn")
+              .addEventListener("click", (e) => {
+                e.preventDefault();
+                auth
+                  .signOut()
+                  .then(() => {
+                    showToast("Logged out successfully", "success");
+                  })
+                  .catch((error) => {
+                    showToast("Error signing out: " + error.message, "error");
+                  });
+              });
+
+            // Reinitialize theme toggle
+            document
+              .getElementById("themeToggle")
+              .addEventListener("click", () => {
+                const currentTheme = body.getAttribute("data-theme");
+
+                if (currentTheme === "light") {
+                  body.removeAttribute("data-theme");
+                  document.getElementById("themeToggle").innerHTML =
+                    '<i class="fas fa-moon"></i>';
+                  localStorage.setItem("theme", "dark");
+                } else {
+                  body.setAttribute("data-theme", "light");
+                  document.getElementById("themeToggle").innerHTML =
+                    '<i class="fas fa-sun"></i>';
+                  localStorage.setItem("theme", "light");
+                }
+              });
+
+            // Reinitialize hamburger menu
+            document
+              .getElementById("hamburger")
+              .addEventListener("click", () => {
+                navLinks.classList.toggle("active");
+              });
+          } else {
+            // User is signed out
+            navActions.innerHTML = `
+              <button class="btn btn-outline" id="loginBtn">Login</button>
+              <button class="btn btn-primary" id="registerBtn">Register</button>
+              <button class="theme-toggle" id="themeToggle">
+                <i class="${
+                  body.getAttribute("data-theme") === "light"
+                    ? "fas fa-sun"
+                    : "fas fa-moon"
+                }"></i>
+              </button>
+              <div class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+              </div>
+            `;
+
+            // Reinitialize event listeners
+            setupModals();
+          }
+        });
+      }
+
+      // Setup modals
+      function setupModals() {
+        // Login Modal
+        const loginBtn = document.getElementById("loginBtn");
+        const loginModal = document.getElementById("loginModal");
+
+        if (loginBtn && loginModal) {
+          loginBtn.addEventListener("click", () => {
+            loginModal.style.display = "flex";
+          });
+        }
+
+        // Register Modal
+        const registerBtn = document.getElementById("registerBtn");
+        const registerModal = document.getElementById("registerModal");
+
+        if (registerBtn && registerModal) {
+          registerBtn.addEventListener("click", () => {
+            registerModal.style.display = "flex";
+          });
+        }
+
+        // Switch between login and register
+        const switchToLogin = document.getElementById("switchToLogin");
+        const switchToRegister = document.getElementById("switchToRegister");
+
+        if (switchToLogin && registerModal && loginModal) {
+          switchToLogin.addEventListener("click", (e) => {
+            e.preventDefault();
+            registerModal.style.display = "none";
+            loginModal.style.display = "flex";
+          });
+        }
+
+        if (switchToRegister && loginModal && registerModal) {
+          switchToRegister.addEventListener("click", (e) => {
+            e.preventDefault();
+            loginModal.style.display = "none";
+            registerModal.style.display = "flex";
+          });
+        }
+
+        // Save Build Modal
+        saveBuildBtn?.addEventListener("click", () => {
+          auth.onAuthStateChanged((user) => {
+            if (!user) {
+              showToast("Please login to save your build", "error");
+              document.getElementById("loginModal").style.display = "flex";
+              return;
+            }
+            document.getElementById("saveBuildModal").style.display = "flex";
+          });
+        });
+
+        // Save Build Form
+        document
+          .getElementById("saveBuildForm")
+          ?.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const buildName = document.getElementById("buildName").value;
+            const buildDescription =
+              document.getElementById("buildDescription").value;
+            saveBuildToInventory(buildName, buildDescription);
+          });
+
+        // Checkout Button
+        checkoutBtn?.addEventListener("click", () => {
+          auth.onAuthStateChanged((user) => {
+            if (!user) {
+              showToast("Please login to proceed to checkout", "error");
+              document.getElementById("loginModal").style.display = "flex";
+              return;
+            }
+
+            // Save build first
+            const buildName = `My Custom Build - ${new Date().toLocaleDateString()}`;
+            saveBuildToInventory(buildName, "Custom PC build for checkout");
+
+            // Then redirect to checkout
+            window.location.href = "checkout.html";
+          });
+        });
+
+        // Quick View Buttons
+        document.querySelectorAll(".quickview-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const pcId = e.target.getAttribute("data-id");
+            showQuickView(pcId);
+          });
+        });
+
+        // Close modals
+        document.querySelectorAll(".close-modal").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            closeAllModals();
+          });
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener("click", (e) => {
+          if (e.target.classList.contains("modal")) {
+            closeAllModals();
+          }
+        });
+      }
+
+      // Setup email/password authentication
+      function setupEmailAuth() {
+        // Login form
+        const loginForm = document.getElementById("loginForm");
+        if (loginForm) {
+          loginForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+            const loginBtnText = document.getElementById("loginBtnText");
+            const loginSpinner = document.getElementById("loginSpinner");
+
+            loginBtnText.style.display = "none";
+            loginSpinner.style.display = "inline-block";
+
+            auth
+              .signInWithEmailAndPassword(email, password)
+              .then(() => {
+                closeAllModals();
+                showToast("Logged in successfully", "success");
+              })
+              .catch((error) => {
+                showToast("Login error: " + error.message, "error");
+              })
+              .finally(() => {
+                loginBtnText.style.display = "inline";
+                loginSpinner.style.display = "none";
+              });
+          });
+        }
+
+        // Register form
+        const registerForm = document.getElementById("registerForm");
+        if (registerForm) {
+          registerForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const name = document.getElementById("registerName").value;
+            const email = document.getElementById("registerEmail").value;
+            const password = document.getElementById("registerPassword").value;
+            const confirmPassword =
+              document.getElementById("registerConfirm").value;
+            const registerBtnText = document.getElementById("registerBtnText");
+            const registerSpinner = document.getElementById("registerSpinner");
+
+            if (password !== confirmPassword) {
+              showToast("Passwords don't match", "error");
+              return;
+            }
+
+            registerBtnText.style.display = "none";
+            registerSpinner.style.display = "inline-block";
+
+            auth
+              .createUserWithEmailAndPassword(email, password)
+              .then((userCredential) => {
+                return userCredential.user.updateProfile({
+                  displayName: name,
+                });
+              })
+              .then(() => {
+                closeAllModals();
+                showToast("Account created successfully", "success");
+              })
+              .catch((error) => {
+                showToast("Registration error: " + error.message, "error");
+              })
+              .finally(() => {
+                registerBtnText.style.display = "inline";
+                registerSpinner.style.display = "none";
+              });
+          });
+        }
+      }
+
+      // Setup Google authentication
+      function setupGoogleAuth() {
+        const googleLoginBtn = document.getElementById("googleLoginBtn");
+        const googleRegisterBtn = document.getElementById("googleRegisterBtn");
+
+        const handleGoogleAuth = () => {
+          const provider = new firebase.auth.GoogleAuthProvider();
+
+          auth
+            .signInWithPopup(provider)
+            .then(() => {
+              closeAllModals();
+              showToast("Logged in with Google successfully", "success");
+            })
+            .catch((error) => {
+              showToast("Google login error: " + error.message, "error");
+            });
+        };
+
+        if (googleLoginBtn)
+          googleLoginBtn.addEventListener("click", handleGoogleAuth);
+        if (googleRegisterBtn)
+          googleRegisterBtn.addEventListener("click", handleGoogleAuth);
+      }
+
+      // Setup Facebook authentication
+      function setupFacebookAuth() {
+        const facebookLoginBtn = document.getElementById("facebookLoginBtn");
+        const facebookRegisterBtn = document.getElementById(
+          "facebookRegisterBtn"
+        );
+
+        const handleFacebookAuth = () => {
+          const provider = new firebase.auth.FacebookAuthProvider();
+
+          auth
+            .signInWithPopup(provider)
+            .then(() => {
+              closeAllModals();
+              showToast("Logged in with Facebook successfully", "success");
+            })
+            .catch((error) => {
+              showToast("Facebook login error: " + error.message, "error");
+            });
+        };
+
+        if (facebookLoginBtn)
+          facebookLoginBtn.addEventListener("click", handleFacebookAuth);
+        if (facebookRegisterBtn)
+          facebookRegisterBtn.addEventListener("click", handleFacebookAuth);
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        // Filter tabs
+        filterTabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            filterTabs.forEach((t) => t.classList.remove("active"));
+            tab.classList.add("active");
+            const category = tab.getAttribute("data-category");
+            loadComponents(category);
+            loadFilterOptions(category);
+          });
+        });
+
+        // Search input
+        searchInput?.addEventListener("input", (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          const currentCategory = document
+            .querySelector(".filter-tab.active")
+            .getAttribute("data-category");
+
+          // Filter components based on search term
+          const filteredComponents = components[currentCategory].filter(
+            (component) => component.name.toLowerCase().includes(searchTerm)
+          );
+
+          // Re-render products
+          builderProducts.innerHTML = filteredComponents
+            .map(
+              (component) => `
+              <div class="product-card animate-fade">
+                <img src="${component.image}" alt="${
+                component.name
+              }" class="product-image">
+                <div class="product-info">
+                  <h3 class="product-title">${component.name}</h3>
+                  <div class="product-price">${formatPrice(
+                    component.price
+                  )}</div>
+                  <div class="product-specs">
+                    ${Object.entries(component.specs)
+                      .map(
+                        ([key, value]) => `
+                        <div class="spec-item">
+                          <span class="spec-label">${key}:</span>
+                          <span>${value}</span>
+                        </div>
+                      `
+                      )
+                      .join("")}
+                  </div>
+                  <div class="product-actions">
+                    <button class="btn btn-primary btn-sm add-to-build-btn" data-id="${
+                      component.id
+                    }" data-category="${currentCategory}">
+                      Add to Build
+                    </button>
+                    <button class="btn btn-outline btn-sm add-to-cart-btn" data-id="${
+                      component.id
+                    }" data-category="${currentCategory}">
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `
+            )
+            .join("");
+
+          // Re-add event listeners
+          document.querySelectorAll(".add-to-build-btn").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              const componentId = e.target.getAttribute("data-id");
+              const category = e.target.getAttribute("data-category");
+              addToBuild(category, componentId);
+            });
+          });
+
+          document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              const componentId = e.target.getAttribute("data-id");
+              const category = e.target.getAttribute("data-category");
+              const component = components[category].find(
+                (c) => c.id === componentId
+              );
+              if (component) {
+                showToast(`${component.name} added to cart`, "success");
+              }
+            });
+          });
+        });
+
+        // AI Builder
+        generateBuildBtn?.addEventListener("click", generateAIBuild);
+        applyBuildBtn?.addEventListener("click", applyAIBuild);
+
+        // Email/password auth
+        setupEmailAuth();
+
+        // Social auth
+        setupGoogleAuth();
+        setupFacebookAuth();
+      }
+    </script>
+  </body>
+</html>

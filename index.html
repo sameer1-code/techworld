@@ -1,0 +1,3182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechWorld - Empower Your Tech</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <style>
+      :root {
+        --primary-dark: #0a192f;
+        --primary-light: #64ffda;
+        --secondary-dark: #172a45;
+        --secondary-light: #ccd6f6;
+        --text-light: #e6f1ff;
+        --text-dark: #8892b0;
+        --accent: #1e90ff;
+        --card-bg: rgba(23, 42, 69, 0.7);
+        --error: #ff6b6b;
+        --success: #64ffda;
+      }
+
+      [data-theme="light"] {
+        --primary-dark: #f8f9fa;
+        --primary-light: #1e90ff;
+        --secondary-dark: #e9ecef;
+        --secondary-light: #495057;
+        --text-light: #212529;
+        --text-dark: #6c757d;
+        --accent: #1a73e8;
+        --card-bg: rgba(233, 236, 239, 0.8);
+        --error: #dc3545;
+        --success: #28a745;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      body {
+        color: var(--text-light);
+        background-color: var(--primary-dark);
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /*stars-loop background*/
+      #starfield {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: linear-gradient(to bottom, #000428, #004e92);
+      }
+
+      .star {
+        position: absolute;
+        background-color: #fff;
+        border-radius: 50%;
+        animation: fall linear infinite;
+      }
+
+      @keyframes fall {
+        to {
+          transform: translateY(100vh);
+        }
+      }
+
+      /* Navigation bar and menu styling*/
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 5%;
+        background-color: rgba(10, 25, 47, 0.9);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+
+      .logo i {
+        margin-right: 0.5rem;
+        color: var(--accent);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 500;
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--primary-light);
+        transition: width 0.3s;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 5px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--primary-light);
+        color: var(--primary-light);
+      }
+
+      .btn-primary:hover,
+      .btn-outline:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .theme-toggle {
+        background: none;
+        border: none;
+        color: var(--text-light);
+        font-size: 1.2rem;
+        cursor: pointer;
+        margin-left: 1rem;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid var(--primary-light);
+      }
+
+      .avatar-dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: var(--secondary-dark);
+        min-width: 160px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .dropdown-content a {
+        color: var(--text-light);
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .avatar-dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .hamburger {
+        display: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+
+      /* Header Section */
+      .hero {
+        height: 80vh;
+        display: flex;
+        align-items: center;
+        padding: 0 5%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-content {
+        max-width: 600px;
+        z-index: 2;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+        background: linear-gradient(
+          to right,
+          var(--primary-light),
+          var(--accent)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        color: var(--text-dark);
+      }
+
+      .hero-btns {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .hero-image {
+        position: absolute;
+        right: 5%;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50%;
+        max-width: 700px;
+        z-index: 1;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(-50%) translateX(0);
+        }
+        50% {
+          transform: translateY(-50%) translateX(20px);
+        }
+      }
+
+      /* Product Carousel */
+      .carousel-container {
+        padding: 3rem 5%;
+        background-color: var(--secondary-dark);
+      }
+
+      .section-title {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        color: var(--primary-light);
+      }
+
+      .carousel {
+        display: flex;
+        overflow-x: auto;
+        gap: 2rem;
+        padding: 1rem 0;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .carousel::-webkit-scrollbar {
+        display: none;
+      }
+
+      .product-card {
+        min-width: 280px;
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        flex: 0 0 auto;
+      }
+
+      .product-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .product-info {
+        padding: 1.5rem;
+      }
+
+      .product-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-light);
+      }
+
+      .product-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        margin-bottom: 1rem;
+      }
+
+      .product-rating {
+        color: #ffc107;
+        margin-bottom: 1rem;
+      }
+
+      .product-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      /* Categories */
+      .categories {
+        padding: 3rem 5%;
+      }
+
+      .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+
+      .category-card {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+
+      .category-card:hover {
+        transform: scale(1.05);
+      }
+
+      .category-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        z-index: -1;
+      }
+
+      .category-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        z-index: 1;
+      }
+
+      /* Tested users  */
+      .testimonials {
+        padding: 3rem 5%;
+        background-color: var(--secondary-dark);
+      }
+
+      .testimonial-slider {
+        display: flex;
+        overflow-x: auto;
+        gap: 2rem;
+        padding: 1rem 0;
+      }
+
+      .testimonial-card {
+        min-width: 300px;
+        background-color: var(--card-bg);
+        padding: 2rem;
+        border-radius: 10px;
+        flex: 0 0 auto;
+      }
+
+      .testimonial-text {
+        font-style: italic;
+        margin-bottom: 1rem;
+      }
+
+      .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .author-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .author-info h4 {
+        margin-bottom: 0.2rem;
+      }
+
+      .author-info p {
+        color: var(--text-dark);
+        font-size: 0.9rem;
+      }
+
+      /* Newsletter */
+      .newsletter {
+        padding: 3rem 5%;
+        text-align: center;
+      }
+
+      .newsletter h2 {
+        margin-bottom: 1rem;
+      }
+
+      .newsletter p {
+        margin-bottom: 2rem;
+        color: var(--text-dark);
+      }
+
+      .newsletter-form {
+        display: flex;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .newsletter-input {
+        flex: 1;
+        padding: 0.8rem;
+        border: 1px solid var(--text-dark);
+        border-radius: 5px 0 0 5px;
+        background-color: transparent;
+        color: var(--text-light);
+      }
+
+      .newsletter-btn {
+        padding: 0 1.5rem;
+        border-radius: 0 5px 5px 0;
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        border: none;
+        cursor: pointer;
+      }
+
+      /* Footer section*/
+      footer {
+        background-color: var(--secondary-dark);
+        padding: 3rem 5% 1rem;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .footer-column h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: var(--primary-light);
+      }
+
+      .footer-column ul {
+        list-style: none;
+      }
+
+      .footer-column li {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-column a {
+        color: var(--text-dark);
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+
+      .footer-column a:hover {
+        color: var(--primary-light);
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .social-links a {
+        color: var(--text-light);
+        font-size: 1.2rem;
+      }
+
+      .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid var(--text-dark);
+        color: var(--text-dark);
+      }
+
+      /* Floating ads */
+      .floating-icons {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        z-index: 99;
+      }
+
+      .floating-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+
+      .floating-icon:hover {
+        transform: scale(1.1);
+      }
+
+      /* Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background-color: var(--secondary-dark);
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .modal h2 {
+        margin-bottom: 1.5rem;
+        color: var(--primary-light);
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 5px;
+        border: 1px solid var(--text-dark);
+        background-color: transparent;
+        color: var(--text-light);
+      }
+
+      .form-submit {
+        width: 100%;
+        padding: 0.8rem;
+        margin-top: 1rem;
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      /* Social accounts login buttons */
+      .social-login {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin: 1rem 0;
+      }
+
+      .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s;
+      }
+
+      .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .google-btn {
+        background-color: #fff;
+        color: #757575;
+      }
+
+      .facebook-btn {
+        background-color: #3b5998;
+        color: white;
+      }
+
+      .phone-btn {
+        background-color: var(--accent);
+        color: white;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        margin: 1rem 0;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid var(--text-dark);
+      }
+
+      .divider-text {
+        padding: 0 1rem;
+        color: var(--text-dark);
+      }
+
+      /* Phone Authentication  Modal */
+      .phone-auth-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .phone-auth-content {
+        background-color: var(--secondary-dark);
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 400px;
+        width: 90%;
+        position: relative;
+      }
+
+      .recaptcha-container {
+        margin: 1rem 0;
+      }
+
+      /* Quick View Modal */
+      .quick-view-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .quick-view-image {
+        width: 100%;
+        height: 300px;
+        object-fit: contain;
+        border-radius: 5px;
+      }
+
+      .quick-view-title {
+        font-size: 1.5rem;
+      }
+
+      .quick-view-price {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-light);
+      }
+
+      /* Cart Modal */
+      .cart-modal-content {
+        max-width: 800px;
+        width: 90%;
+      }
+
+      .cart-items {
+        max-height: 400px;
+        overflow-y: auto;
+        margin-bottom: 1rem;
+      }
+
+      .cart-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--text-dark);
+      }
+
+      .cart-item-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+
+      .cart-item-details {
+        flex: 1;
+      }
+
+      .cart-item-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .cart-item-price {
+        color: var(--primary-light);
+        font-weight: 600;
+      }
+
+      .cart-item-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .quantity-btn {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background-color: var(--primary-dark);
+        color: var(--text-light);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .quantity-input {
+        width: 40px;
+        text-align: center;
+        background-color: transparent;
+        color: var(--text-light);
+        border: 1px solid var(--text-dark);
+        border-radius: 5px;
+        padding: 0.2rem;
+      }
+
+      .remove-item {
+        background: none;
+        border: none;
+        color: #ff6b6b;
+        cursor: pointer;
+      }
+
+      .cart-summary {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--text-dark);
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+
+      .total-row {
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--text-dark);
+      }
+
+      .checkout-btn {
+        width: 100%;
+        margin-top: 1rem;
+      }
+
+      /* Wishlist Modal */
+      .wishlist-modal-content {
+        max-width: 800px;
+        width: 90%;
+      }
+
+      .wishlist-items {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .wishlist-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--text-dark);
+      }
+
+      .wishlist-item-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+
+      .wishlist-item-details {
+        flex: 1;
+      }
+
+      .wishlist-item-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .wishlist-item-price {
+        color: var(--primary-light);
+        font-weight: 600;
+      }
+
+      .wishlist-item-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* Support Modal */
+      .support-modal-content {
+        max-width: 600px;
+        width: 90%;
+      }
+
+      .support-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .support-form textarea {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 5px;
+        border: 1px solid var(--text-dark);
+        background-color: transparent;
+        color: var(--text-light);
+        min-height: 150px;
+        resize: vertical;
+      }
+
+      /* Profile Modal */
+      .profile-modal-content {
+        max-width: 600px;
+        width: 90%;
+      }
+
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary-light);
+      }
+
+      .profile-info h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .profile-info p {
+        color: var(--text-dark);
+      }
+
+      .profile-details {
+        margin-top: 1.5rem;
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid var(--text-dark);
+      }
+
+      .detail-label {
+        font-weight: 600;
+      }
+
+      /* Settings Modal */
+      .settings-modal-content {
+        max-width: 600px;
+        width: 90%;
+      }
+
+      .settings-tabs {
+        display: flex;
+        border-bottom: 1px solid var(--text-dark);
+        margin-bottom: 1.5rem;
+      }
+
+      .settings-tab {
+        padding: 0.8rem 1.5rem;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+      }
+
+      .settings-tab.active {
+        border-bottom: 2px solid var(--primary-light);
+        color: var(--primary-light);
+      }
+
+      .settings-content {
+        display: none;
+      }
+
+      .settings-content.active {
+        display: block;
+      }
+
+      /* Empty States */
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+      }
+
+      .empty-state p {
+        color: var(--text-dark);
+      }
+
+      /* Toast Notification */
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1100;
+      }
+
+      .toast {
+        padding: 1rem 1.5rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .toast-success {
+        background-color: var(--success);
+        color: var(--primary-dark);
+      }
+
+      .toast-error {
+        background-color: var(--error);
+        color: white;
+      }
+
+      .toast-close {
+        margin-left: 1rem;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+
+      /* Ad Banner */
+      .ad-banner {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--secondary-dark);
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        max-width: 90%;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      .ad-banner img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+
+      .ad-content {
+        flex: 1;
+      }
+
+      .ad-title {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .ad-close {
+        background: none;
+        border: none;
+        color: var(--text-dark);
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateX(-50%) translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(-50%) translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Mobile Styles */
+      @media (max-width: 992px) {
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background-color: var(--secondary-dark);
+          flex-direction: column;
+          padding: 1rem 5%;
+          gap: 1rem;
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .hamburger {
+          display: block;
+        }
+
+        .hero {
+          flex-direction: column;
+          height: auto;
+          padding-top: 5rem;
+          text-align: center;
+        }
+
+        .hero-content {
+          max-width: 100%;
+          margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .hero-btns {
+          justify-content: center;
+        }
+
+        .hero-image {
+          position: relative;
+          right: auto;
+          top: auto;
+          transform: none;
+          width: 100%;
+          margin-top: 2rem;
+        }
+
+        .floating-icons {
+          bottom: 20px;
+          right: 20px;
+        }
+
+        .floating-icon {
+          width: 40px;
+          height: 40px;
+          font-size: 1rem;
+        }
+
+        .ad-banner {
+          flex-direction: column;
+          text-align: center;
+          width: 90%;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .hero h1 {
+          font-size: 2rem;
+        }
+
+        .hero-btns {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .btn {
+          width: 100%;
+        }
+
+        .newsletter-form {
+          flex-direction: column;
+        }
+
+        .newsletter-input {
+          border-radius: 5px;
+          margin-bottom: 0.5rem;
+        }
+
+        .newsletter-btn {
+          border-radius: 5px;
+          padding: 0.8rem;
+        }
+
+        .social-login {
+          flex-direction: column;
+        }
+
+        .cart-item,
+        .wishlist-item {
+          flex-direction: column;
+        }
+
+        .cart-item-image,
+        .wishlist-item-image {
+          width: 100%;
+          height: auto;
+          max-height: 200px;
+        }
+      }
+
+      /* Animations */
+      .animate-pop {
+        animation: popIn 0.5s ease-out;
+      }
+
+      @keyframes popIn {
+        0% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .animate-fade {
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      /* Loading Spinner */
+      .spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: var(--primary-light);
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Starfield Background -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Navigation -->
+    <nav>
+      <a href="#" class="logo">
+        <i class="fas fa-laptop-code"></i> TechWorld
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#" class="active">Home</a>
+        <a href="./products.html">Products</a>
+        <a href="./category.html">Categories</a>
+        <a href="./build_pc.html">Build PC</a>
+        <a href="./about_us..html">About us</a>
+      </div>
+
+      <div class="nav-actions" id="navActions">
+        <button class="btn btn-outline" id="loginBtn">Login</button>
+        <button class="btn btn-primary" id="registerBtn">Register</button>
+        <button class="theme-toggle" id="themeToggle">
+          <i class="fas fa-moon"></i>
+        </button>
+        <div class="hamburger" id="hamburger">
+          <i class="fas fa-bars"></i>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content animate__animated animate__fadeInLeft">
+        <h1>Empower Your Tech | Discover the Future at TechWorld</h1>
+        <p>
+          Explore the latest in cutting-edge technology and elevate your digital
+          experience with our premium selection of computers and accessories.
+        </p>
+        <div class="hero-btns">
+          <button class="btn btn-primary" id="shopNowBtn">Shop Now</button>
+          <button class="btn btn-outline" id="exploreDealsBtn">
+            Explore Deals
+          </button>
+        </div>
+      </div>
+      <img
+        src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+        alt="Premium Laptop"
+        class="hero-image animate__animated animate__fadeInRight"
+      />
+    </section>
+
+    <!-- Featured Products -->
+    <section class="carousel-container" id="products">
+      <h2 class="section-title">Featured Products</h2>
+      <div class="carousel" id="productCarousel">
+        <!-- Product cards will be added here by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories" id="categories">
+      <h2 class="section-title">Shop by Category</h2>
+      <div class="category-grid">
+        <div class="category-card" onclick="location.href='#gaming'">
+          <img
+            src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+            alt="Gaming"
+            class="category-image"
+          />
+          <h3 class="category-name">Gaming</h3>
+        </div>
+        <div class="category-card" onclick="location.href='#workstations'">
+          <img
+            src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+            alt="Workstations"
+            class="category-image"
+          />
+          <h3 class="category-name">Workstations</h3>
+        </div>
+        <div class="category-card" onclick="location.href='#laptops'">
+          <img
+            src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+            alt="Laptops"
+            class="category-image"
+          />
+          <h3 class="category-name">Laptops</h3>
+        </div>
+        <div class="category-card" onclick="location.href='#accessories'">
+          <img
+            src="https://images.unsplash.com/photo-1546054454-aa26e2b734c7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+            alt="Accessories"
+            class="category-image"
+          />
+          <h3 class="category-name">Accessories</h3>
+        </div>
+        <div class="category-card" onclick="location.href='#monitors'">
+          <img
+            src="https://images.unsplash.com/photo-1540932239986-30128078f3c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+            alt="Monitors"
+            class="category-image"
+          />
+          <h3 class="category-name">Monitors</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+      <h2 class="section-title">What Our Customers Say</h2>
+      <div class="testimonial-slider">
+        <div class="testimonial-card">
+          <p class="testimonial-text">
+            "TechWorld has the best selection of high-performance computers. My
+            new workstation has transformed my productivity!"
+          </p>
+          <div class="testimonial-author">
+            <img
+              src="https://randomuser.me/api/portraits/women/44.jpg"
+              alt="Sarah J."
+              class="author-avatar"
+            />
+            <div class="author-info">
+              <h4>Sarah J.</h4>
+              <p>Graphic Designer</p>
+              <div class="product-rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-text">
+            "The customer service is outstanding. They helped me build the
+            perfect gaming PC within my budget."
+          </p>
+          <div class="testimonial-author">
+            <img
+              src="https://randomuser.me/api/portraits/men/32.jpg"
+              alt="Michael T."
+              class="author-avatar"
+            />
+            <div class="author-info">
+              <h4>Michael T.</h4>
+              <p>Gaming Enthusiast</p>
+              <div class="product-rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-text">
+            "Fast shipping and excellent packaging. My laptop arrived in perfect
+            condition. Will definitely shop here again!"
+          </p>
+          <div class="testimonial-author">
+            <img
+              src="https://randomuser.me/api/portraits/women/68.jpg"
+              alt="Emily R."
+              class="author-avatar"
+            />
+            <div class="author-info">
+              <h4>Emily R.</h4>
+              <p>College Student</p>
+              <div class="product-rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter" id="newsletter">
+      <h2 class="section-title">Stay Updated</h2>
+      <p>
+        Subscribe to our newsletter for the latest tech news, exclusive deals,
+        and special offers.
+      </p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input
+          type="email"
+          placeholder="Your email address"
+          class="newsletter-input"
+          required
+        />
+        <button type="submit" class="newsletter-btn">Subscribe</button>
+      </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-column">
+          <h3>About TechWorld</h3>
+          <p>
+            Your premier destination for cutting-edge technology and premium
+            computing solutions since 2025.
+          </p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h3>Support</h3>
+          <ul>
+            <li><a href="#">Returns & Exchanges</a></li>
+            <li><a href="#">Product Warranty</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Shipping Info</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="#">My Account</a></li>
+            <li><a href="#">Order Tracking</a></li>
+            <li><a href="#">Wishlist</a></li>
+            <li><a href="#">Cart</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Contact Us</h3>
+          <ul>
+            <li>
+              <i class="fas fa-map-marker-alt"></i> Tech Street, Pathankot City,
+              India
+            </li>
+            <li><i class="fas fa-phone"></i> (+91) 62390-58371</li>
+            <li><i class="fas fa-envelope"></i> rudramehra322@gmail.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 TechWorld. All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Floating Icons -->
+    <div class="floating-icons">
+      <div class="floating-icon" title="Cart" id="cartBtn">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cartCount">0</span>
+      </div>
+      <div class="floating-icon" title="Wishlist" id="wishlistBtn">
+        <i class="fas fa-heart"></i>
+        <span class="wishlist-count" id="wishlistCount">0</span>
+      </div>
+      <div class="floating-icon" title="Support" id="supportBtn">
+        <i class="fas fa-headset"></i>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+      <div class="modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Login to Your Account</h2>
+
+        <div class="social-login">
+          <button class="social-btn google-btn" id="googleLoginBtn">
+            <i class="fab fa-google"></i> Continue with Google
+          </button>
+          <button class="social-btn facebook-btn" id="facebookLoginBtn">
+            <i class="fab fa-facebook-f"></i> Continue with Facebook
+          </button>
+          <button class="social-btn phone-btn" id="phoneLoginBtn">
+            <i class="fas fa-phone"></i> Continue with Phone
+          </button>
+        </div>
+
+        <div class="divider">
+          <span class="divider-text">OR</span>
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" required />
+          </div>
+          <button type="submit" class="form-submit" id="emailLoginBtn">
+            <span id="loginBtnText">Login</span>
+            <span
+              id="loginSpinner"
+              class="spinner"
+              style="display: none"
+            ></span>
+          </button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem">
+          Don't have an account? <a href="#" id="switchToRegister">Register</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+      <div class="modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Create an Account</h2>
+
+        <div class="social-login">
+          <button class="social-btn google-btn" id="googleRegisterBtn">
+            <i class="fab fa-google"></i> Continue with Google
+          </button>
+          <button class="social-btn facebook-btn" id="facebookRegisterBtn">
+            <i class="fab fa-facebook-f"></i> Continue with Facebook
+          </button>
+          <button class="social-btn phone-btn" id="phoneRegisterBtn">
+            <i class="fas fa-phone"></i> Continue with Phone
+          </button>
+        </div>
+
+        <div class="divider">
+          <span class="divider-text">OR</span>
+        </div>
+
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="registerName">Full Name</label>
+            <input type="text" id="registerName" required />
+          </div>
+          <div class="form-group">
+            <label for="registerEmail">Email</label>
+            <input type="email" id="registerEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Password</label>
+            <input type="password" id="registerPassword" required />
+          </div>
+          <div class="form-group">
+            <label for="registerConfirm">Confirm Password</label>
+            <input type="password" id="registerConfirm" required />
+          </div>
+          <button type="submit" class="form-submit" id="emailRegisterBtn">
+            <span id="registerBtnText">Register</span>
+            <span
+              id="registerSpinner"
+              class="spinner"
+              style="display: none"
+            ></span>
+          </button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem">
+          Already have an account? <a href="#" id="switchToLogin">Login</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Phone Auth Modal -->
+    <div class="phone-auth-modal" id="phoneAuthModal">
+      <div class="phone-auth-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Phone Number Login</h2>
+        <form id="phoneAuthForm">
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              placeholder="+1 123 456 7890"
+              required
+            />
+          </div>
+          <div class="recaptcha-container" id="recaptchaContainer"></div>
+          <div id="verificationCodeGroup" style="display: none">
+            <div class="form-group">
+              <label for="verificationCode">Verification Code</label>
+              <input type="text" id="verificationCode" required />
+            </div>
+          </div>
+          <button type="submit" class="form-submit" id="phoneAuthBtn">
+            <span id="phoneAuthBtnText">Send Verification Code</span>
+            <span
+              id="phoneAuthSpinner"
+              class="spinner"
+              style="display: none"
+            ></span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div class="modal" id="quickViewModal">
+      <div class="modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <div class="quick-view-content">
+          <!-- Content will be added by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+      <div class="modal-content cart-modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Your Shopping Cart</h2>
+        <div class="cart-items" id="cartItems">
+          <!-- Cart items will be added here -->
+        </div>
+        <div class="cart-summary">
+          <div class="summary-row">
+            <span>Subtotal:</span>
+            <span id="cartSubtotal">₹0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping:</span>
+            <span id="cartShipping">₹0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Tax:</span>
+            <span id="cartTax">₹0.00</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>Total:</span>
+            <span id="cartTotal">₹0.00</span>
+          </div>
+          <button class="btn btn-primary checkout-btn" id="checkoutBtn">
+            Proceed to Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wishlist Modal -->
+    <div class="modal" id="wishlistModal">
+      <div class="modal-content wishlist-modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Your Wishlist</h2>
+        <div class="wishlist-items" id="wishlistItems">
+          <!-- Wishlist items will be added here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Support Modal -->
+    <div class="modal" id="supportModal">
+      <div class="modal-content support-modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Contact Support</h2>
+        <form class="support-form" id="supportForm">
+          <div class="form-group">
+            <label for="supportName">Your Name</label>
+            <input type="text" id="supportName" required />
+          </div>
+          <div class="form-group">
+            <label for="supportEmail">Email</label>
+            <input type="email" id="supportEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="supportSubject">Subject</label>
+            <input type="text" id="supportSubject" required />
+          </div>
+          <div class="form-group">
+            <label for="supportMessage">Message</label>
+            <textarea id="supportMessage" required></textarea>
+          </div>
+          <button type="submit" class="form-submit">Send Message</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal" id="profileModal">
+      <div class="modal-content profile-modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Your Profile</h2>
+        <div class="profile-header">
+          <img
+            src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+            alt="User Avatar"
+            class="profile-avatar"
+            id="profileAvatar"
+          />
+          <div class="profile-info">
+            <h3 id="profileName">Loading...</h3>
+            <p id="profileEmail">Loading...</p>
+          </div>
+        </div>
+        <div class="profile-details">
+          <div class="detail-row">
+            <span class="detail-label">Account Created:</span>
+            <span id="accountCreated">Loading...</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Last Login:</span>
+            <span id="lastLogin">Loading...</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Orders:</span>
+            <span id="orderCount">0</span>
+          </div>
+        </div>
+        <button
+          class="btn btn-primary"
+          id="editProfileBtn"
+          style="margin-top: 1rem; width: 100%"
+        >
+          Edit Profile
+        </button>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+      <div class="modal-content settings-modal-content animate-pop">
+        <span class="close-modal">&times;</span>
+        <h2>Settings</h2>
+        <div class="settings-tabs">
+          <div class="settings-tab active" data-tab="account">Account</div>
+          <div class="settings-tab" data-tab="notifications">Notifications</div>
+          <div class="settings-tab" data-tab="privacy">Privacy</div>
+        </div>
+
+        <div class="settings-content active" id="accountTab">
+          <h3>Account Settings</h3>
+          <form id="accountSettingsForm">
+            <div class="form-group">
+              <label for="displayName">Display Name</label>
+              <input type="text" id="displayName" required />
+            </div>
+            <div class="form-group">
+              <label for="profileEmail">Email</label>
+              <input type="email" id="settingsEmail" required />
+            </div>
+            <button type="submit" class="form-submit">Save Changes</button>
+          </form>
+        </div>
+
+        <div class="settings-content" id="notificationsTab">
+          <h3>Notification Preferences</h3>
+          <form id="notificationSettingsForm">
+            <div
+              class="form-group"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              <label for="emailNotifications">Email Notifications</label>
+              <input type="checkbox" id="emailNotifications" checked />
+            </div>
+            <div
+              class="form-group"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              <label for="promoEmails">Promotional Emails</label>
+              <input type="checkbox" id="promoEmails" checked />
+            </div>
+            <div
+              class="form-group"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              <label for="orderUpdates">Order Updates</label>
+              <input type="checkbox" id="orderUpdates" checked />
+            </div>
+            <button type="submit" class="form-submit">Save Preferences</button>
+          </form>
+        </div>
+
+        <div class="settings-content" id="privacyTab">
+          <h3>Privacy Settings</h3>
+          <form id="privacySettingsForm">
+            <div
+              class="form-group"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              <label for="showProfile">Show Public Profile</label>
+              <input type="checkbox" id="showProfile" checked />
+            </div>
+            <div
+              class="form-group"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              <label for="searchVisibility">Search Engine Visibility</label>
+              <input type="checkbox" id="searchVisibility" checked />
+            </div>
+            <button type="submit" class="form-submit">Save Settings</button>
+          </form>
+          <button
+            class="btn btn-outline"
+            id="deleteAccountBtn"
+            style="margin-top: 1rem; width: 100%"
+          >
+            Delete Account
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDxlEFhfp8yQw2F8R5enY0F2Dw5dtlSqjU",
+        authDomain: "techworld-497d8.firebaseapp.com",
+        projectId: "techworld-497d8",
+        storageBucket: "techworld-497d8.firebasestorage.app",
+        messagingSenderId: "1086581951112",
+        appId: "1:1086581951112:web:60bf842c4b2fa5d9936d3d",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+
+      // Product Data
+      const products = [
+        {
+          id: 1,
+          title: "Quantum X Gaming Laptop",
+          price: 149999,
+          rating: 4.8,
+          image:
+            "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "High-performance gaming laptop with RTX 3080 and 240Hz display.",
+        },
+        {
+          id: 2,
+          title: "Nebula Pro Workstation",
+          price: 249999,
+          rating: 4.9,
+          image:
+            "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "Professional workstation with Xeon processor and Quadro graphics.",
+        },
+        {
+          id: 3,
+          title: "Stellar Ultrabook",
+          price: 89999,
+          rating: 4.6,
+          image:
+            "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "Slim and lightweight ultrabook with all-day battery life.",
+        },
+        {
+          id: 4,
+          title: "Galaxy RTX 4090",
+          price: 159999,
+          rating: 4.7,
+          image:
+            "https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description:
+            "The most powerful GPU for extreme gaming and content creation.",
+        },
+        {
+          id: 5,
+          title: "Cosmos 4K Monitor",
+          price: 69999,
+          rating: 4.5,
+          image:
+            "https://images.unsplash.com/photo-1540932239986-30128078f3c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description: "32-inch 4K HDR monitor with 144Hz refresh rate.",
+        },
+        {
+          id: 6,
+          title: "Aurora Mechanical Keyboard",
+          price: 12999,
+          rating: 4.4,
+          image:
+            "https://images.unsplash.com/photo-1587829741301-dc798b83add3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          description: "RGB mechanical keyboard with customizable switches.",
+        },
+      ];
+
+      // Cart and Wishlist
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+      let ads = []; // Will be populated from Firebase
+
+      // DOM Elements
+      const navActions = document.getElementById("navActions");
+      const navLinks = document.getElementById("navLinks");
+      const hamburger = document.getElementById("hamburger");
+      const themeToggle = document.getElementById("themeToggle");
+      const body = document.body;
+      const canvas = document.getElementById("starfield");
+      const toastContainer = document.getElementById("toastContainer");
+
+      // Initialize the app
+      document.addEventListener("DOMContentLoaded", () => {
+        initStarfield();
+        initThemeToggle();
+        initMobileMenu();
+        renderProducts();
+        updateCartCount();
+        updateWishlistCount();
+        setupAuthStateListener();
+        setupModals();
+        setupEventListeners();
+        loadAdsFromFirebase();
+      });
+
+      // Load ads from Firebase
+      function loadAdsFromFirebase() {
+        db.collection("ads")
+          .get()
+          .then((querySnapshot) => {
+            ads = [];
+            querySnapshot.forEach((doc) => {
+              ads.push(doc.data());
+            });
+            showRandomAd();
+          })
+          .catch((error) => {
+            console.error("Error loading ads:", error);
+          });
+      }
+
+      // Show random ad banner
+      function showRandomAd() {
+        if (ads.length === 0) return;
+
+        const randomAd = ads[Math.floor(Math.random() * ads.length)];
+        const adBanner = document.createElement("div");
+        adBanner.className = "ad-banner";
+        adBanner.innerHTML = `
+          <img src="${randomAd.image}" alt="${randomAd.title}">
+          <div class="ad-content">
+            <div class="ad-title">${randomAd.title}</div>
+            <p>${randomAd.description}</p>
+          </div>
+          <button class="ad-close">&times;</button>
+        `;
+
+        document.body.appendChild(adBanner);
+
+        // Close ad button
+        adBanner.querySelector(".ad-close").addEventListener("click", () => {
+          adBanner.remove();
+        });
+
+        // Auto-close after 10 seconds
+        setTimeout(() => {
+          if (document.body.contains(adBanner)) {
+            adBanner.remove();
+          }
+        }, 10000);
+      }
+
+      // Starfield Animation
+      function initStarfield() {
+        if (!canvas) return;
+
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const stars = [];
+        const starCount = 200;
+
+        for (let i = 0; i < starCount; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 1.5,
+            speed: Math.random() * 0.5 + 0.1,
+          });
+        }
+
+        function drawStars() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "white";
+
+          stars.forEach((star) => {
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            star.y += star.speed;
+
+            if (star.y > canvas.height) {
+              star.y = 0;
+              star.x = Math.random() * canvas.width;
+            }
+          });
+
+          requestAnimationFrame(drawStars);
+        }
+
+        drawStars();
+
+        window.addEventListener("resize", () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+      }
+
+      // Theme Toggle
+      function initThemeToggle() {
+        if (!themeToggle || !body) return;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "light") {
+          body.setAttribute("data-theme", "light");
+          themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+
+        themeToggle.addEventListener("click", () => {
+          const currentTheme = body.getAttribute("data-theme");
+
+          if (currentTheme === "light") {
+            body.removeAttribute("data-theme");
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            localStorage.setItem("theme", "dark");
+          } else {
+            body.setAttribute("data-theme", "light");
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            localStorage.setItem("theme", "light");
+          }
+        });
+      }
+
+      // Mobile Menu
+      function initMobileMenu() {
+        if (!hamburger || !navLinks) return;
+
+        hamburger.addEventListener("click", () => {
+          navLinks.classList.toggle("active");
+        });
+      }
+
+      // Format price in Indian Rupees
+      function formatPrice(price) {
+        return new Intl.NumberFormat("en-IN", {
+          style: "currency",
+          currency: "INR",
+          maximumFractionDigits: 0,
+        }).format(price);
+      }
+
+      // Update cart count display
+      function updateCartCount() {
+        const count = cart.reduce((total, item) => total + item.quantity, 0);
+        document.getElementById("cartCount").textContent = count;
+      }
+
+      // Update wishlist count display
+      function updateWishlistCount() {
+        document.getElementById("wishlistCount").textContent = wishlist.length;
+      }
+
+      // Save cart to localStorage
+      function saveCart() {
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartCount();
+      }
+
+      // Save wishlist to localStorage
+      function saveWishlist() {
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+        updateWishlistCount();
+      }
+
+      // Add product to cart
+      function addToCart(productId, quantity = 1) {
+        const product = products.find((p) => p.id === productId);
+        if (!product) return;
+
+        const existingItem = cart.find((item) => item.id === productId);
+
+        if (existingItem) {
+          existingItem.quantity += quantity;
+        } else {
+          cart.push({
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            image: product.image,
+            quantity: quantity,
+          });
+        }
+
+        saveCart();
+        renderCart();
+        showToast(`${product.title} added to cart`, "success");
+      }
+
+      // Remove product from cart
+      function removeFromCart(productId) {
+        const product = products.find((p) => p.id === productId);
+        cart = cart.filter((item) => item.id !== productId);
+        saveCart();
+        renderCart();
+        if (product) {
+          showToast(`${product.title} removed from cart`, "success");
+        }
+      }
+
+      // Update cart item quantity
+      function updateCartItemQuantity(productId, quantity) {
+        const item = cart.find((item) => item.id === productId);
+        if (item) {
+          item.quantity = quantity;
+          saveCart();
+          renderCart();
+        }
+      }
+
+      // Add product to wishlist
+      function addToWishlist(productId) {
+        const product = products.find((p) => p.id === productId);
+        if (!product || wishlist.some((item) => item.id === productId)) return;
+
+        wishlist.push({
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          image: product.image,
+        });
+
+        saveWishlist();
+        renderWishlist();
+        showToast(`${product.title} added to wishlist`, "success");
+      }
+
+      // Remove product from wishlist
+      function removeFromWishlist(productId) {
+        const product = products.find((p) => p.id === productId);
+        wishlist = wishlist.filter((item) => item.id !== productId);
+        saveWishlist();
+        renderWishlist();
+        if (product) {
+          showToast(`${product.title} removed from wishlist`, "success");
+        }
+      }
+
+      // Render products
+      function renderProducts() {
+        const carousel = document.getElementById("productCarousel");
+        if (!carousel) return;
+
+        carousel.innerHTML = products
+          .map(
+            (product) => `
+            <div class="product-card animate-fade">
+              <img src="${product.image}" alt="${
+              product.title
+            }" class="product-image">
+              <div class="product-info">
+                <h3 class="product-title">${product.title}</h3>
+                <div class="product-price">${formatPrice(product.price)}</div>
+                <div class="product-rating">
+                  ${'<i class="fas fa-star"></i>'.repeat(
+                    Math.floor(product.rating)
+                  )}
+                  ${
+                    product.rating % 1 >= 0.5
+                      ? '<i class="fas fa-star-half-alt"></i>'
+                      : ""
+                  }
+                  ${'<i class="far fa-star"></i>'.repeat(
+                    5 - Math.ceil(product.rating)
+                  )}
+                  (${product.rating})
+                </div>
+                <div class="product-actions">
+                  <button class="btn btn-primary btn-sm quick-view-btn" data-id="${
+                    product.id
+                  }">Quick View</button>
+                  <button class="btn btn-outline btn-sm add-to-cart-btn" data-id="${
+                    product.id
+                  }">Add to Cart</button>
+                  <button class="wishlist-btn" data-id="${
+                    product.id
+                  }" title="Add to wishlist">
+                    <i class="${
+                      wishlist.some((item) => item.id === product.id)
+                        ? "fas"
+                        : "far"
+                    } fa-heart"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `
+          )
+          .join("");
+
+        // Add event listeners for product actions
+        document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const productId = parseInt(e.target.getAttribute("data-id"));
+            addToCart(productId);
+          });
+        });
+
+        document.querySelectorAll(".wishlist-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const productId = parseInt(
+              e.target.closest("button").getAttribute("data-id")
+            );
+            if (wishlist.some((item) => item.id === productId)) {
+              removeFromWishlist(productId);
+              e.target.innerHTML = '<i class="far fa-heart"></i>';
+            } else {
+              addToWishlist(productId);
+              e.target.innerHTML = '<i class="fas fa-heart"></i>';
+            }
+          });
+        });
+
+        // Quick View
+        document.querySelectorAll(".quick-view-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const productId = parseInt(e.target.getAttribute("data-id"));
+            const product = products.find((p) => p.id === productId);
+            const quickViewModal = document.getElementById("quickViewModal");
+
+            if (!product || !quickViewModal) return;
+
+            const quickViewContent = document.querySelector(
+              ".quick-view-content"
+            );
+            if (!quickViewContent) return;
+
+            quickViewContent.innerHTML = `
+              <img src="${product.image}" alt="${
+              product.title
+            }" class="quick-view-image">
+              <h3 class="quick-view-title">${product.title}</h3>
+              <div class="quick-view-price">${formatPrice(product.price)}</div>
+              <div class="product-rating">
+                ${'<i class="fas fa-star"></i>'.repeat(
+                  Math.floor(product.rating)
+                )}
+                ${
+                  product.rating % 1 >= 0.5
+                    ? '<i class="fas fa-star-half-alt"></i>'
+                    : ""
+                }
+                ${'<i class="far fa-star"></i>'.repeat(
+                  5 - Math.ceil(product.rating)
+                )}
+                (${product.rating})
+              </div>
+              <p>${product.description}</p>
+              <div class="product-actions">
+                <button class="btn btn-primary add-to-cart-btn" data-id="${
+                  product.id
+                }">Add to Cart</button>
+                <button class="btn btn-outline wishlist-btn" data-id="${
+                  product.id
+                }">
+                  <i class="${
+                    wishlist.some((item) => item.id === product.id)
+                      ? "fas"
+                      : "far"
+                  } fa-heart"></i> Wishlist
+                </button>
+              </div>
+            `;
+
+            // Add event listeners in quick view modal
+            quickViewContent
+              .querySelector(".add-to-cart-btn")
+              .addEventListener("click", (e) => {
+                const productId = parseInt(e.target.getAttribute("data-id"));
+                addToCart(productId);
+              });
+
+            quickViewContent
+              .querySelector(".wishlist-btn")
+              .addEventListener("click", (e) => {
+                const productId = parseInt(
+                  e.target.closest("button").getAttribute("data-id")
+                );
+                if (wishlist.some((item) => item.id === productId)) {
+                  removeFromWishlist(productId);
+                  e.target.innerHTML = '<i class="far fa-heart"></i> Wishlist';
+                } else {
+                  addToWishlist(productId);
+                  e.target.innerHTML = '<i class="fas fa-heart"></i> Wishlist';
+                }
+              });
+
+            quickViewModal.style.display = "flex";
+          });
+        });
+      }
+
+      // Render cart items
+      function renderCart() {
+        const cartItemsContainer = document.getElementById("cartItems");
+        if (!cartItemsContainer) return;
+
+        if (cart.length === 0) {
+          cartItemsContainer.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-shopping-cart"></i>
+              <p>Your cart is empty</p>
+            </div>
+          `;
+          document.getElementById("cartSubtotal").textContent = formatPrice(0);
+          document.getElementById("cartShipping").textContent = formatPrice(0);
+          document.getElementById("cartTax").textContent = formatPrice(0);
+          document.getElementById("cartTotal").textContent = formatPrice(0);
+          return;
+        }
+
+        cartItemsContainer.innerHTML = cart
+          .map(
+            (item) => `
+            <div class="cart-item">
+              <img src="${item.image}" alt="${
+              item.title
+            }" class="cart-item-image">
+              <div class="cart-item-details">
+                <h3 class="cart-item-title">${item.title}</h3>
+                <div class="cart-item-price">${formatPrice(item.price)}</div>
+              </div>
+              <div class="cart-item-actions">
+                <button class="quantity-btn minus" data-id="${
+                  item.id
+                }">-</button>
+                <input type="number" class="quantity-input" value="${
+                  item.quantity
+                }" min="1" data-id="${item.id}">
+                <button class="quantity-btn plus" data-id="${
+                  item.id
+                }">+</button>
+                <button class="remove-item" data-id="${item.id}">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          `
+          )
+          .join("");
+
+        // Calculate totals
+        const subtotal = cart.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+        const shipping = subtotal > 50000 ? 0 : 5000; // Free shipping over ₹50,000
+        const tax = subtotal * 0.18; // 18% tax
+        const total = subtotal + shipping + tax;
+
+        document.getElementById("cartSubtotal").textContent =
+          formatPrice(subtotal);
+        document.getElementById("cartShipping").textContent =
+          formatPrice(shipping);
+        document.getElementById("cartTax").textContent = formatPrice(tax);
+        document.getElementById("cartTotal").textContent = formatPrice(total);
+
+        // Add event listeners for quantity changes
+        document.querySelectorAll(".quantity-btn.minus").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const id = parseInt(e.target.getAttribute("data-id"));
+            const item = cart.find((item) => item.id === id);
+            if (item && item.quantity > 1) {
+              updateCartItemQuantity(id, item.quantity - 1);
+            }
+          });
+        });
+
+        document.querySelectorAll(".quantity-btn.plus").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const id = parseInt(e.target.getAttribute("data-id"));
+            const item = cart.find((item) => item.id === id);
+            if (item) {
+              updateCartItemQuantity(id, item.quantity + 1);
+            }
+          });
+        });
+
+        document.querySelectorAll(".quantity-input").forEach((input) => {
+          input.addEventListener("change", (e) => {
+            const id = parseInt(e.target.getAttribute("data-id"));
+            const quantity = parseInt(e.target.value);
+            if (quantity > 0) {
+              updateCartItemQuantity(id, quantity);
+            }
+          });
+        });
+
+        document.querySelectorAll(".remove-item").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const id = parseInt(
+              e.target.closest("button").getAttribute("data-id")
+            );
+            removeFromCart(id);
+          });
+        });
+      }
+
+      // Render wishlist items
+      function renderWishlist() {
+        const wishlistItemsContainer = document.getElementById("wishlistItems");
+        if (!wishlistItemsContainer) return;
+
+        if (wishlist.length === 0) {
+          wishlistItemsContainer.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-heart"></i>
+              <p>Your wishlist is empty</p>
+            </div>
+          `;
+          return;
+        }
+
+        wishlistItemsContainer.innerHTML = wishlist
+          .map(
+            (item) => `
+            <div class="wishlist-item">
+              <img src="${item.image}" alt="${
+              item.title
+            }" class="wishlist-item-image">
+              <div class="wishlist-item-details">
+                <h3 class="wishlist-item-title">${item.title}</h3>
+                <div class="wishlist-item-price">${formatPrice(
+                  item.price
+                )}</div>
+              </div>
+              <div class="wishlist-item-actions">
+                <button class="btn btn-primary btn-sm add-to-cart" data-id="${
+                  item.id
+                }">Add to Cart</button>
+                <button class="remove-item" data-id="${item.id}">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          `
+          )
+          .join("");
+
+        // Add event listeners for wishlist actions
+        document.querySelectorAll(".add-to-cart").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const id = parseInt(e.target.getAttribute("data-id"));
+            addToCart(id);
+          });
+        });
+
+        document
+          .querySelectorAll(".wishlist-item .remove-item")
+          .forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              const id = parseInt(
+                e.target.closest("button").getAttribute("data-id")
+              );
+              removeFromWishlist(id);
+            });
+          });
+      }
+
+      // Show toast notification
+      function showToast(message, type = "success") {
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+          ${message}
+          <span class="toast-close">&times;</span>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+
+        // Manual close
+        toast.querySelector(".toast-close").addEventListener("click", () => {
+          toast.remove();
+        });
+      }
+
+      // Close all modals
+      function closeAllModals() {
+        document.querySelectorAll(".modal").forEach((modal) => {
+          modal.style.display = "none";
+        });
+      }
+
+      // Setup authentication state listener
+      function setupAuthStateListener() {
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            // User is signed in
+            const userDisplayName =
+              user.displayName || user.email.split("@")[0];
+            const userPhotoURL =
+              user.photoURL ||
+              "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+
+            navActions.innerHTML = `
+              <div class="avatar-dropdown">
+                <img src="${userPhotoURL}" alt="${userDisplayName}" class="user-avatar">
+                <div class="dropdown-content">
+                  <a href="#" id="profileBtn">Profile</a>
+                  <a href="#" id="settingsBtn">Settings</a>
+                  <a href="#" id="logoutBtn">Logout</a>
+                </div>
+              </div>
+              <button class="theme-toggle" id="themeToggle">
+                <i class="${
+                  body.getAttribute("data-theme") === "light"
+                    ? "fas fa-sun"
+                    : "fas fa-moon"
+                }"></i>
+              </button>
+              <div class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+              </div>
+            `;
+
+            // Reinitialize event listeners
+            document
+              .getElementById("profileBtn")
+              .addEventListener("click", (e) => {
+                e.preventDefault();
+                showProfileModal(user);
+              });
+
+            document
+              .getElementById("settingsBtn")
+              .addEventListener("click", (e) => {
+                e.preventDefault();
+                document.getElementById("settingsModal").style.display = "flex";
+              });
+
+            document
+              .getElementById("logoutBtn")
+              .addEventListener("click", (e) => {
+                e.preventDefault();
+                auth
+                  .signOut()
+                  .then(() => {
+                    showToast("Logged out successfully", "success");
+                  })
+                  .catch((error) => {
+                    showToast("Error signing out: " + error.message, "error");
+                  });
+              });
+
+            // Reinitialize theme toggle
+            document
+              .getElementById("themeToggle")
+              .addEventListener("click", () => {
+                const currentTheme = body.getAttribute("data-theme");
+
+                if (currentTheme === "light") {
+                  body.removeAttribute("data-theme");
+                  document.getElementById("themeToggle").innerHTML =
+                    '<i class="fas fa-moon"></i>';
+                  localStorage.setItem("theme", "dark");
+                } else {
+                  body.setAttribute("data-theme", "light");
+                  document.getElementById("themeToggle").innerHTML =
+                    '<i class="fas fa-sun"></i>';
+                  localStorage.setItem("theme", "light");
+                }
+              });
+
+            // Reinitialize hamburger menu
+            document
+              .getElementById("hamburger")
+              .addEventListener("click", () => {
+                navLinks.classList.toggle("active");
+              });
+          } else {
+            // User is signed out
+            navActions.innerHTML = `
+              <button class="btn btn-outline" id="loginBtn">Login</button>
+              <button class="btn btn-primary" id="registerBtn">Register</button>
+              <button class="theme-toggle" id="themeToggle">
+                <i class="${
+                  body.getAttribute("data-theme") === "light"
+                    ? "fas fa-sun"
+                    : "fas fa-moon"
+                }"></i>
+              </button>
+              <div class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+              </div>
+            `;
+
+            // Reinitialize event listeners
+            setupModals();
+          }
+        });
+      }
+
+      // Show profile modal
+      function showProfileModal(user) {
+        const profileModal = document.getElementById("profileModal");
+        const profileName = document.getElementById("profileName");
+        const profileEmail = document.getElementById("profileEmail");
+        const profileAvatar = document.getElementById("profileAvatar");
+        const accountCreated = document.getElementById("accountCreated");
+        const lastLogin = document.getElementById("lastLogin");
+
+        profileName.textContent = user.displayName || "User";
+        profileEmail.textContent = user.email || "No email";
+        profileAvatar.src =
+          user.photoURL ||
+          "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+
+        // Format dates
+        const createdDate = new Date(user.metadata.creationTime);
+        const lastSignInDate = new Date(user.metadata.lastSignInTime);
+
+        accountCreated.textContent = createdDate.toLocaleDateString();
+        lastLogin.textContent = lastSignInDate.toLocaleDateString();
+
+        profileModal.style.display = "flex";
+      }
+
+      // Setup modals
+      function setupModals() {
+        // Login Modal
+        const loginBtn = document.getElementById("loginBtn");
+        const loginModal = document.getElementById("loginModal");
+
+        if (loginBtn && loginModal) {
+          loginBtn.addEventListener("click", () => {
+            loginModal.style.display = "flex";
+          });
+        }
+
+        // Register Modal
+        const registerBtn = document.getElementById("registerBtn");
+        const registerModal = document.getElementById("registerModal");
+
+        if (registerBtn && registerModal) {
+          registerBtn.addEventListener("click", () => {
+            registerModal.style.display = "flex";
+          });
+        }
+
+        // Switch between login and register
+        const switchToLogin = document.getElementById("switchToLogin");
+        const switchToRegister = document.getElementById("switchToRegister");
+
+        if (switchToLogin && registerModal && loginModal) {
+          switchToLogin.addEventListener("click", (e) => {
+            e.preventDefault();
+            registerModal.style.display = "none";
+            loginModal.style.display = "flex";
+          });
+        }
+
+        if (switchToRegister && loginModal && registerModal) {
+          switchToRegister.addEventListener("click", (e) => {
+            e.preventDefault();
+            loginModal.style.display = "none";
+            registerModal.style.display = "flex";
+          });
+        }
+
+        // Close modals
+        document.querySelectorAll(".close-modal").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            closeAllModals();
+          });
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener("click", (e) => {
+          if (e.target.classList.contains("modal")) {
+            closeAllModals();
+          }
+        });
+      }
+
+      // Setup email/password authentication
+      function setupEmailAuth() {
+        // Login form
+        const loginForm = document.getElementById("loginForm");
+        if (loginForm) {
+          loginForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+            const loginBtnText = document.getElementById("loginBtnText");
+            const loginSpinner = document.getElementById("loginSpinner");
+
+            loginBtnText.style.display = "none";
+            loginSpinner.style.display = "inline-block";
+
+            auth
+              .signInWithEmailAndPassword(email, password)
+              .then(() => {
+                closeAllModals();
+                showToast("Logged in successfully", "success");
+              })
+              .catch((error) => {
+                showToast("Login error: " + error.message, "error");
+              })
+              .finally(() => {
+                loginBtnText.style.display = "inline";
+                loginSpinner.style.display = "none";
+              });
+          });
+        }
+
+        // Register form
+        const registerForm = document.getElementById("registerForm");
+        if (registerForm) {
+          registerForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const name = document.getElementById("registerName").value;
+            const email = document.getElementById("registerEmail").value;
+            const password = document.getElementById("registerPassword").value;
+            const confirmPassword =
+              document.getElementById("registerConfirm").value;
+            const registerBtnText = document.getElementById("registerBtnText");
+            const registerSpinner = document.getElementById("registerSpinner");
+
+            if (password !== confirmPassword) {
+              showToast("Passwords don't match", "error");
+              return;
+            }
+
+            registerBtnText.style.display = "none";
+            registerSpinner.style.display = "inline-block";
+
+            auth
+              .createUserWithEmailAndPassword(email, password)
+              .then((userCredential) => {
+                return userCredential.user.updateProfile({
+                  displayName: name,
+                });
+              })
+              .then(() => {
+                closeAllModals();
+                showToast("Account created successfully", "success");
+              })
+              .catch((error) => {
+                showToast("Registration error: " + error.message, "error");
+              })
+              .finally(() => {
+                registerBtnText.style.display = "inline";
+                registerSpinner.style.display = "none";
+              });
+          });
+        }
+      }
+
+      // Setup Google authentication
+      function setupGoogleAuth() {
+        const googleLoginBtn = document.getElementById("googleLoginBtn");
+        const googleRegisterBtn = document.getElementById("googleRegisterBtn");
+
+        const handleGoogleAuth = () => {
+          const provider = new firebase.auth.GoogleAuthProvider();
+
+          auth
+            .signInWithPopup(provider)
+            .then(() => {
+              closeAllModals();
+              showToast("Logged in with Google successfully", "success");
+            })
+            .catch((error) => {
+              showToast("Google login error: " + error.message, "error");
+            });
+        };
+
+        if (googleLoginBtn)
+          googleLoginBtn.addEventListener("click", handleGoogleAuth);
+        if (googleRegisterBtn)
+          googleRegisterBtn.addEventListener("click", handleGoogleAuth);
+      }
+
+      // Setup Facebook authentication
+      function setupFacebookAuth() {
+        const facebookLoginBtn = document.getElementById("facebookLoginBtn");
+        const facebookRegisterBtn = document.getElementById(
+          "facebookRegisterBtn"
+        );
+
+        const handleFacebookAuth = () => {
+          const provider = new firebase.auth.FacebookAuthProvider();
+
+          auth
+            .signInWithPopup(provider)
+            .then(() => {
+              closeAllModals();
+              showToast("Logged in with Facebook successfully", "success");
+            })
+            .catch((error) => {
+              showToast("Facebook login error: " + error.message, "error");
+            });
+        };
+
+        if (facebookLoginBtn)
+          facebookLoginBtn.addEventListener("click", handleFacebookAuth);
+        if (facebookRegisterBtn)
+          facebookRegisterBtn.addEventListener("click", handleFacebookAuth);
+      }
+
+      // Setup phone authentication
+      function setupPhoneAuth() {
+        const phoneLoginBtn = document.getElementById("phoneLoginBtn");
+        const phoneRegisterBtn = document.getElementById("phoneRegisterBtn");
+        const phoneAuthModal = document.getElementById("phoneAuthModal");
+        const phoneAuthForm = document.getElementById("phoneAuthForm");
+        const phoneAuthBtn = document.getElementById("phoneAuthBtn");
+        const phoneAuthBtnText = document.getElementById("phoneAuthBtnText");
+        const phoneAuthSpinner = document.getElementById("phoneAuthSpinner");
+        const verificationCodeGroup = document.getElementById(
+          "verificationCodeGroup"
+        );
+        const recaptchaContainer =
+          document.getElementById("recaptchaContainer");
+
+        let confirmationResult = null;
+        let recaptchaVerifier = null;
+
+        const handlePhoneAuthClick = () => {
+          closeAllModals();
+          phoneAuthModal.style.display = "flex";
+
+          // Initialize reCAPTCHA
+          recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+            recaptchaContainer,
+            {
+              size: "normal",
+              callback: (response) => {
+                // reCAPTCHA solved, allow phone auth
+              },
+              "expired-callback": () => {
+                showToast("reCAPTCHA expired. Please try again.", "error");
+              },
+            }
+          );
+
+          recaptchaVerifier.render().catch((error) => {
+            console.error("reCAPTCHA render error:", error);
+            showToast(
+              "Error loading reCAPTCHA. Please refresh the page.",
+              "error"
+            );
+          });
+        };
+
+        if (phoneLoginBtn)
+          phoneLoginBtn.addEventListener("click", handlePhoneAuthClick);
+        if (phoneRegisterBtn)
+          phoneRegisterBtn.addEventListener("click", handlePhoneAuthClick);
+
+        if (phoneAuthForm) {
+          phoneAuthForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const phoneNumber = document.getElementById("phoneNumber").value;
+            const verificationCode =
+              document.getElementById("verificationCode").value;
+
+            phoneAuthBtnText.style.display = "none";
+            phoneAuthSpinner.style.display = "inline-block";
+
+            if (!confirmationResult) {
+              // Step 1: Send verification code
+              auth
+                .signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
+                .then((result) => {
+                  confirmationResult = result;
+                  verificationCodeGroup.style.display = "block";
+                  phoneAuthBtnText.textContent = "Verify Code";
+                  showToast("Verification code sent to your phone", "success");
+                })
+                .catch((error) => {
+                  showToast(
+                    "Error sending verification code: " + error.message,
+                    "error"
+                  );
+                  // Reset reCAPTCHA
+                  if (recaptchaVerifier) {
+                    recaptchaVerifier.clear();
+                    recaptchaVerifier.render().catch((renderError) => {
+                      console.error("reCAPTCHA re-render error:", renderError);
+                    });
+                  }
+                })
+                .finally(() => {
+                  phoneAuthBtnText.style.display = "inline";
+                  phoneAuthSpinner.style.display = "none";
+                });
+            } else {
+              // Step 2: Verify code
+              confirmationResult
+                .confirm(verificationCode)
+                .then((userCredential) => {
+                  // For registration, update the user's profile
+                  if (phoneRegisterBtn) {
+                    const displayName =
+                      document.getElementById("registerName")?.value || "User";
+                    return userCredential.user.updateProfile({
+                      displayName: displayName,
+                    });
+                  }
+                })
+                .then(() => {
+                  closeAllModals();
+                  showToast("Phone authentication successful", "success");
+                })
+                .catch((error) => {
+                  showToast("Error verifying code: " + error.message, "error");
+                })
+                .finally(() => {
+                  phoneAuthBtnText.style.display = "inline";
+                  phoneAuthSpinner.style.display = "none";
+                });
+            }
+          });
+        }
+
+        // Close phone auth modal
+        document
+          .querySelector(".phone-auth-modal .close-modal")
+          ?.addEventListener("click", () => {
+            phoneAuthModal.style.display = "none";
+            confirmationResult = null;
+            verificationCodeGroup.style.display = "none";
+            phoneAuthBtnText.textContent = "Send Verification Code";
+
+            // Clear reCAPTCHA
+            if (recaptchaVerifier) {
+              recaptchaVerifier.clear();
+              recaptchaVerifier = null;
+            }
+          });
+      }
+
+      // Setup settings tabs
+      function setupSettingsTabs() {
+        const tabs = document.querySelectorAll(".settings-tab");
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            // Remove active class from all tabs and content
+            document
+              .querySelectorAll(".settings-tab")
+              .forEach((t) => t.classList.remove("active"));
+            document
+              .querySelectorAll(".settings-content")
+              .forEach((c) => c.classList.remove("active"));
+
+            // Add active class to clicked tab and corresponding content
+            tab.classList.add("active");
+            const tabId = tab.getAttribute("data-tab");
+            document.getElementById(`${tabId}Tab`).classList.add("active");
+          });
+        });
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        // Cart button
+        document.getElementById("cartBtn")?.addEventListener("click", () => {
+          renderCart();
+          document.getElementById("cartModal").style.display = "flex";
+        });
+
+        // Wishlist button
+        document
+          .getElementById("wishlistBtn")
+          ?.addEventListener("click", () => {
+            renderWishlist();
+            document.getElementById("wishlistModal").style.display = "flex";
+          });
+
+        // Support button
+        document.getElementById("supportBtn")?.addEventListener("click", () => {
+          document.getElementById("supportModal").style.display = "flex";
+        });
+
+        // Checkout button
+        document
+          .getElementById("checkoutBtn")
+          ?.addEventListener("click", () => {
+            if (cart.length === 0) {
+              showToast("Your cart is empty", "error");
+              return;
+            }
+
+            // Check if user is logged in
+            auth.onAuthStateChanged((user) => {
+              if (user) {
+                // User is logged in, redirect to checkout
+                window.location.href = "checkout.html";
+              } else {
+                // User is not logged in, show login modal
+                showToast("Please login to proceed to checkout", "error");
+                document.getElementById("loginModal").style.display = "flex";
+              }
+            });
+          });
+
+        // Shop Now button
+        document.getElementById("shopNowBtn")?.addEventListener("click", () => {
+          document
+            .getElementById("products")
+            .scrollIntoView({ behavior: "smooth" });
+        });
+
+        // Explore Deals button
+        document
+          .getElementById("exploreDealsBtn")
+          ?.addEventListener("click", () => {
+            document
+              .getElementById("categories")
+              .scrollIntoView({ behavior: "smooth" });
+          });
+
+        // Newsletter form
+        document
+          .getElementById("newsletterForm")
+          ?.addEventListener("submit", (e) => {
+            e.preventDefault();
+            showToast("Thanks for subscribing to our newsletter!", "success");
+            e.target.reset();
+          });
+
+        // Support form
+        document
+          .getElementById("supportForm")
+          ?.addEventListener("submit", (e) => {
+            e.preventDefault();
+            showToast(
+              "Your message has been sent to our support team!",
+              "success"
+            );
+            e.target.reset();
+            closeAllModals();
+          });
+
+        // Settings tabs
+        setupSettingsTabs();
+
+        // Email/password auth
+        setupEmailAuth();
+
+        // Social auth
+        setupGoogleAuth();
+        setupFacebookAuth();
+
+        // Phone auth
+        setupPhoneAuth();
+      }
+    </script>
+  </body>
+</html>
